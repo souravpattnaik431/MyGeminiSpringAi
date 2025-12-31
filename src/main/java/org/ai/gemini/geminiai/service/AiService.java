@@ -14,6 +14,17 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 
+/**
+ * Service for managing AI-powered tool change queries.
+ * <p>
+ * This service handles both individual and batch tool queries,
+ * managing parallel execution, token tracking, and error handling.
+ * </p>
+ *
+ * @author Gemini AI Service
+ * @version 1.0
+ * @since 2026-01-01
+ */
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -35,7 +46,18 @@ public class AiService {
     @Value("tool.last.changes.days")
     public String days;
 
-
+    /**
+     * Retrieves tool changes with complete metadata for a single tool.
+     * <p>
+     * This method queries the AI service for the latest updates about a specific
+     * tool,
+     * tracking token usage and processing time.
+     * </p>
+     *
+     * @param toolName Name of the tool to query
+     * @return ToolChangeResult containing content, tokens, processing time, and
+     *         status
+     */
     public ToolChangeResult getToolChangesWithMetadata(String toolName) {
         long startTime = System.currentTimeMillis();
         log.info("Tool name is: {}", toolName);
@@ -89,6 +111,16 @@ public class AiService {
         }
     }
 
+    /**
+     * Retrieves tool changes for multiple tools in parallel.
+     * <p>
+     * This method processes multiple tool queries concurrently using a thread pool,
+     * aggregates the results, and calculates total token usage and processing time.
+     * </p>
+     *
+     * @param tools List of tool names to query
+     * @return ToolChangesResponse with individual results and aggregated statistics
+     */
     public ToolChangesResponse getAllToolChanges(List<String> tools) {
         long startTime = System.currentTimeMillis();
         List<ToolChangeResult> allResults = new ArrayList<>();
@@ -139,8 +171,14 @@ public class AiService {
                 .mapToInt(ToolChangeResult::outputTokens)
                 .sum();
 
-        log.info("Total processing time for {} tools: {}ms", tools.size(), totalTime);
-        log.info("Total input tokens: {}, Total output tokens: {}", totalInputTokens, totalOutputTokens);
+        log.info("=".repeat(80));
+        log.info("BATCH PROCESSING SUMMARY");
+        log.info("Total tools processed: {}", tools.size());
+        log.info("Total processing time: {}ms ({} seconds)", totalTime, totalTime / 1000.0);
+        log.info("Total input tokens (all tools): {}", totalInputTokens);
+        log.info("Total output tokens (all tools): {}", totalOutputTokens);
+        log.info("Total tokens consumed: {}", totalInputTokens + totalOutputTokens);
+        log.info("=".repeat(80));
 
         return new ToolChangesResponse(
                 allResults,
