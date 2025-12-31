@@ -3,6 +3,8 @@ package org.ai.gemini.geminiai.service;
 import module java.base;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.ai.gemini.geminiai.dto.ToolChangeResult;
+import org.ai.gemini.geminiai.dto.ToolChangesResponse;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.chat.prompt.Prompt;
@@ -34,57 +36,119 @@ public class AiService {
     public String days;
 
 
-    public String getToolChanges(String toolName) {
+    public ToolChangeResult getToolChangesWithMetadata(String toolName) {
+        long startTime = System.currentTimeMillis();
         log.info("Tool name is: {}", toolName);
-        Resource toolPrompt = resourceLoader.getResource("classpath:prompts/" + toolName + ".txt");
-        PromptTemplate promptTemplate = new PromptTemplate(toolPrompt);
-        Prompt prompt = promptTemplate.create(Map.of("days", days));
-        log.info("Final Input Prompt is {}", prompt.getContents());
-        ChatResponse chatResponse;
+
         try {
-            chatResponse = chatClient.prompt(prompt).call().chatResponse();
-        } catch (Exception e) {
-            log.error("Exception in getting chat response from AI {}",e.getMessage());
-            throw new RuntimeException("Exception in getting response from AI: " + e.getMessage());
-        }
-        if (chatResponse == null) {
-            log.error("Empty chat response for tool: {}", toolName);
-            return "Empty Chat Response from AI";
-        } else {
+            Resource toolPrompt = resourceLoader.getResource("classpath:prompts/" + toolName + ".txt");
+            PromptTemplate promptTemplate = new PromptTemplate(toolPrompt);
+            Prompt prompt = promptTemplate.create(Map.of("days", days));
+            log.info("Final Input Prompt is {}", prompt.getContents());
+
+            ChatResponse chatResponse = chatClient.prompt(prompt).call().chatResponse();
+            long processingTime = System.currentTimeMillis() - startTime;
+
+            if (chatResponse == null) {
+                log.error("Empty chat response for tool: {}", toolName);
+                return new ToolChangeResult(
+                        toolName,
+                        "Empty Chat Response from AI",
+                        null,
+                        null,
+                        processingTime,
+                        "ERROR");
+            }
+
             Integer inputTokens = chatResponse.getMetadata().getUsage().getPromptTokens();
             Integer outputTokens = chatResponse.getMetadata().getUsage().getCompletionTokens();
+            String outputFromAI = chatResponse.getResult().getOutput().getText();
+
             log.info("Total input tokens for {}: {}", toolName, inputTokens);
             log.info("Total output tokens for {}: {}", toolName, outputTokens);
-            String outputFromAI = chatResponse.getResult().getOutput().getText();
-            log.info("outputFromAI is {}",outputFromAI);
-            return outputFromAI;
+            log.info("Processing time for {}: {}ms", toolName, processingTime);
+
+            return new ToolChangeResult(
+                    toolName,
+                    outputFromAI,
+                    inputTokens,
+                    outputTokens,
+                    processingTime,
+                    "SUCCESS");
+
+        } catch (Exception e) {
+            long processingTime = System.currentTimeMillis() - startTime;
+            log.error("Exception in getting chat response from AI for tool {}: {}", toolName, e.getMessage());
+            return new ToolChangeResult(
+                    toolName,
+                    "Error: " + e.getMessage(),
+                    null,
+                    null,
+                    processingTime,
+                    "ERROR");
         }
     }
-    public List<String> getAllToolChanges(List<String> tools) {
+
+    public ToolChangesResponse getAllToolChanges(List<String> tools) {
         long startTime = System.currentTimeMillis();
-        List<String> allResults = new ArrayList<>();
+        List<ToolChangeResult> allResults = new ArrayList<>();
 
         for (int i = 0; i < tools.size(); i += batchSize) {
             List<String> batch = tools.subList(i, Math.min(i + batchSize, tools.size()));
 
-            List<CompletableFuture<String>> futures = batch.stream()
-                    .map(tool -> CompletableFuture.supplyAsync(() -> getToolChanges(tool), executorService)
-                            .completeOnTimeout("TIMEOUT", individualTimeout, TimeUnit.SECONDS))
+            List<CompletableFuture<ToolChangeResult>> futures = batch.stream()
+                    .map(tool -> CompletableFuture.supplyAsync(() -> getToolChangesWithMetadata(tool), executorService)
+                            .completeOnTimeout(
+                                    new ToolChangeResult(
+                                            tool,
+                                            "Request timed out",
+                                            null,
+                                            null,
+                                            individualTimeout * 1000,
+                                            "TIMEOUT"),
+                                    individualTimeout,
+                                    TimeUnit.SECONDS))
                     .toList();
 
             try {
                 CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).get(batchTimeout, TimeUnit.SECONDS);
             } catch (Exception e) {
-                System.out.println("Batch partial failure: " + e.getMessage());
+                log.warn("Batch partial failure: {}", e.getMessage());
             }
 
-            allResults.addAll(futures.stream().map(f -> f.getNow("UNKNOWN")).toList());
+            allResults.addAll(futures.stream().map(f -> f.getNow(
+                    new ToolChangeResult(
+                            "UNKNOWN",
+                            "Failed to retrieve result",
+                            null,
+                            null,
+                            null,
+                            "ERROR")))
+                    .toList());
         }
 
         long totalTime = System.currentTimeMillis() - startTime;
-        System.out.println("Total processing time for " + tools.size() + " tools: " + totalTime + "ms");
 
-        return allResults;
+        int totalInputTokens = allResults.stream()
+                .filter(r -> r.inputTokens() != null)
+                .mapToInt(ToolChangeResult::inputTokens)
+                .sum();
+
+        int totalOutputTokens = allResults.stream()
+                .filter(r -> r.outputTokens() != null)
+                .mapToInt(ToolChangeResult::outputTokens)
+                .sum();
+
+        log.info("Total processing time for {} tools: {}ms", tools.size(), totalTime);
+        log.info("Total input tokens: {}, Total output tokens: {}", totalInputTokens, totalOutputTokens);
+
+        return new ToolChangesResponse(
+                allResults,
+                tools.size(),
+                totalTime,
+                totalInputTokens,
+                totalOutputTokens,
+                LocalDateTime.now().toString());
     }
 
 }

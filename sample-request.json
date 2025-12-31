@@ -1,0 +1,9 @@
+{
+    "tools": [
+        "azure-devops",
+        "playwright",
+        "saucelabs",
+        "selenium-java",
+        "spring-boot"
+    ]
+}
