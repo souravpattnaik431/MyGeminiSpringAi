@@ -20,7 +20,7 @@ Present the information in a clear, scannable format that busy DevOps engineers 
 
 Search for the latest Azure DevOps news from the past {days} days, including:
 
-- Azure Pipelines updates (tasks, agents, yaml)
+- Azure Pipelines updates (tasks, agents, YAML)
 - Azure Repos improvements
 - Azure Boards enhancements
 - Security and compliance updates
@@ -28,8 +28,3 @@ Search for the latest Azure DevOps news from the past {days} days, including:
 
 Focus on news that would impact teams using Azure DevOps.
 If limited recent news, include significant developments from the past month.
-
-Check against the last known response provided below. If there are NO meaningful updates or new information since then, simply reply with "NO NEW CHANGES".
-
-Last Response:
-{last_response}

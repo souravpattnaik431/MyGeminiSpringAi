@@ -17,40 +17,74 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class AiService {
     private final ChatClient chatClient;
+    private final ExecutorService executorService = new ThreadPoolExecutor(
+            10, 20, 60L, TimeUnit.SECONDS,
+            new ArrayBlockingQueue<>(100), new ThreadPoolExecutor.CallerRunsPolicy());
 
-    @Value("classpath:/prompts/playwright.txt")
-    private Resource playwrightPrompt;
     private final ResourceLoader resourceLoader;
+    @Value("${app.ai.batch-size:50}")
+    private int batchSize;
+
+    @Value("${app.ai.timeout.individual:60}")
+    private long individualTimeout;
+
+    @Value("${app.ai.timeout.batch:120}")
+    private long batchTimeout;
+    @Value("tool.last.changes.days")
+    public String days;
 
 
-    public String readTexFileContent(String fileName){
-        Resource resource = resourceLoader.getResource("classpath:last-responses/" + fileName);
+    public String getToolChanges(String toolName) {
+        log.info("Tool name is: {}", toolName);
+        Resource toolPrompt = resourceLoader.getResource("classpath:prompts/" + toolName + ".txt");
+        PromptTemplate promptTemplate = new PromptTemplate(toolPrompt);
+        Prompt prompt = promptTemplate.create(Map.of("days", days));
+        log.info("Final Input Prompt is {}", prompt.getContents());
+        ChatResponse chatResponse;
         try {
-            return resource.getContentAsString(StandardCharsets.UTF_8);
-        } catch (IOException e) {
-            log.error("File not found for {} ",fileName);
+            chatResponse = chatClient.prompt(prompt).call().chatResponse();
+        } catch (Exception e) {
+            log.error("Exception in getting chat response from AI {}",e.getMessage());
+            throw new RuntimeException("Exception in getting response from AI: " + e.getMessage());
         }
-        return "";
-    }
-
-    public String getPlaywrightChanges(String days) {
-        PromptTemplate promptTemplate=new PromptTemplate(playwrightPrompt);
-        String lastResponse=readTexFileContent("playwright-response.txt");
-        Prompt prompt=promptTemplate.create(Map.of("days",days,"lastResponse",lastResponse));
-        ChatResponse chatResponse = chatClient.prompt(prompt).call().chatResponse();
-        if(chatResponse==null)
-        {
-            log.error("Empty chat response");
-            return "";
-        }
-        else {
+        if (chatResponse == null) {
+            log.error("Empty chat response for tool: {}", toolName);
+            return "Empty Chat Response from AI";
+        } else {
             Integer inputTokens = chatResponse.getMetadata().getUsage().getPromptTokens();
             Integer outputTokens = chatResponse.getMetadata().getUsage().getCompletionTokens();
-            log.info("Total input tokens {}",inputTokens);
-            log.info("Total output tokens {}",outputTokens);
-            return chatResponse.getResult().getOutput().getText();
+            log.info("Total input tokens for {}: {}", toolName, inputTokens);
+            log.info("Total output tokens for {}: {}", toolName, outputTokens);
+            String outputFromAI = chatResponse.getResult().getOutput().getText();
+            log.info("outputFromAI is {}",outputFromAI);
+            return outputFromAI;
         }
     }
+    public List<String> getAllToolChanges(List<String> tools) {
+        long startTime = System.currentTimeMillis();
+        List<String> allResults = new ArrayList<>();
 
+        for (int i = 0; i < tools.size(); i += batchSize) {
+            List<String> batch = tools.subList(i, Math.min(i + batchSize, tools.size()));
+
+            List<CompletableFuture<String>> futures = batch.stream()
+                    .map(tool -> CompletableFuture.supplyAsync(() -> getToolChanges(tool), executorService)
+                            .completeOnTimeout("TIMEOUT", individualTimeout, TimeUnit.SECONDS))
+                    .toList();
+
+            try {
+                CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).get(batchTimeout, TimeUnit.SECONDS);
+            } catch (Exception e) {
+                System.out.println("Batch partial failure: " + e.getMessage());
+            }
+
+            allResults.addAll(futures.stream().map(f -> f.getNow("UNKNOWN")).toList());
+        }
+
+        long totalTime = System.currentTimeMillis() - startTime;
+        System.out.println("Total processing time for " + tools.size() + " tools: " + totalTime + "ms");
+
+        return allResults;
+    }
 
 }

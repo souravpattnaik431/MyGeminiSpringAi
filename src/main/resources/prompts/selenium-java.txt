@@ -31,8 +31,3 @@ Search for the latest Selenium Java framework ecosystem news from the past {days
 
 Focus on news that would impact Selenium Java developers and QA engineers in their daily testing work.
 If limited recent news, include significant developments from the past month.
-
-Check against the last known response provided below. If there are NO meaningful updates or new information since then, simply reply with "NO NEW CHANGES".
-
-Last Response:
-{last_response}

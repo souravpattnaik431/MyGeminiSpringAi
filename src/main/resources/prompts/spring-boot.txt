@@ -29,8 +29,3 @@ Search for the latest Spring Boot ecosystem news from the past {days} days, incl
 
 Focus on news that would impact Spring Boot developers in their daily work.
 If limited recent news, include significant developments from the past month.
-
-Check against the last known response provided below. If there are NO meaningful updates or new information since then, simply reply with "NO NEW CHANGES".
-
-Last Response:
-{last_response}

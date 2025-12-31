@@ -28,8 +28,3 @@ Search for the latest SauceLabs platform news from the past {days} days, includi
 
 Focus on news that would impact QA engineers using SauceLabs.
 If limited recent news, include significant developments from the past month.
-
-Check against the last known response provided below. If there are NO meaningful updates or new information since then, simply reply with "NO NEW CHANGES".
-
-Last Response:
-{last_response}
