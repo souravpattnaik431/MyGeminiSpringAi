@@ -1,15 +1,15 @@
 package org.ai.gemini.geminiai.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.ai.gemini.geminiai.dto.ToolChangeResult;
 import org.ai.gemini.geminiai.dto.ToolChangesRequest;
 import org.ai.gemini.geminiai.dto.ToolChangesResponse;
 import org.ai.gemini.geminiai.service.AiService;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
-import lombok.extern.slf4j.Slf4j;
+
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
