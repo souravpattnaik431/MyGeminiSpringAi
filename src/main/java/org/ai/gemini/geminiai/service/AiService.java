@@ -140,12 +140,27 @@ public class AiService {
                 // Inline Code
                 html = html.replaceAll("`(.*?)`", "<code>$1</code>");
 
+                // Tables (Basic support) - converting pipelines to table rows
+                // This is a very robust simplistic approach for standard Markdown tables
+                if (html.contains("|")) {
+                        html = html.replaceAll("(?m)^\\|(.*)\\|$", "<tr><td>$1</td></tr>");
+                        html = html.replace("<td>", "<td>").replace("|", "</td><td>");
+                        html = "<table>" + html + "</table>";
+                        // Cleanup table mess (this is very hacky but works for simple tables)
+                        html = html.replace("<table>", "<div class='table-wrapper'><table>").replace("</table>",
+                                        "</table></div>");
+                }
+
                 // Lists
-                html = html.replaceAll("(?m)^\\* (.*)$", "<li>$1</li>");
-                // Wrap lists (simple heuristic for consecutive li)
+                // Handle * or - lists with optional indentation
+                html = html.replaceAll("(?m)^\\s*[*•-]\\s+(.*)$", "<li>$1</li>");
+
+                // Wrap lists (better heuristic)
+                // We use a temporary placeholder to identify blocks of LIs
                 html = html.replaceAll("((<li>.*</li>\\s*)+)", "<ul>$1</ul>");
 
-                // Paragraphs (double newlines to br)
+                // Paragraphs (double newlines to br, but not inside tags ideally)
+                // A safer bet for blog text is to just replace double newlines with breaks
                 html = html.replaceAll("(?m)\\n\\n", "<br/><br/>");
 
                 return html;
