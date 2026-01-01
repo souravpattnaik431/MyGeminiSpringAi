@@ -1,0 +1,25 @@
+# Stage 1: Build Stage (Oracle Java 25)
+FROM container-registry.oracle.com/java/openjdk:25 AS build
+WORKDIR /app
+
+# Maven ko manually download aur install kiya kyunki image mein nahi tha
+RUN curl -o maven.tar.gz https://archive.apache.org/dist/maven/maven-3/3.9.9/binaries/apache-maven-3.9.9-bin.tar.gz && \
+    tar -xzf maven.tar.gz && \
+    mv apache-maven-3.9.9 /opt/maven
+
+# Maven ko system path mein dala
+ENV PATH="/opt/maven/bin:${PATH}"
+
+# Code copy karke build kiya
+COPY . .
+RUN mvn clean package -DskipTests
+
+# Stage 2: Run Stage (Only Runtime)
+FROM container-registry.oracle.com/java/openjdk:25
+WORKDIR /app
+
+# Pehle stage se sirf JAR file uthai
+COPY --from=build /app/target/*.jar app.jar
+
+# App start karne ki command
+ENTRYPOINT ["java", "-jar", "app.jar"]
