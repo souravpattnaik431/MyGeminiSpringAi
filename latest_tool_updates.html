@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Tool Updates</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            background-color: #f8faff;
+            /* Very light blue background */
+        }
+
+        h1 {
+            text-align: center;
+            color: #0b253b;
+            /* Darker blue */
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 15px;
+            margin-bottom: 40px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .tool-update {
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.1);
+            /* Blue-ish shadow */
+            margin-bottom: 35px;
+            padding: 40px;
+            border: 1px solid #e1e8ed;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .tool-update:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(52, 152, 219, 0.15);
+        }
+
+        .tool-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #f0f4f8;
+            padding-bottom: 20px;
+            margin-bottom: 25px;
+        }
+
+        .tool-name {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: #2c82c9;
+            /* Bright Blue */
+            margin: 0;
+            text-transform: capitalize;
+            letter-spacing: -0.5px;
+        }
+
+        .meta-info {
+            font-size: 0.85em;
+            color: #5d7ca6;
+            background: #eef6fc;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        .content {
+            font-size: 1.05em;
+            color: #4a5568;
+        }
+
+        /* Content Markdown Styling */
+        .content h1,
+        .content h2,
+        .content h3 {
+            color: #1a365d;
+            /* Dark Blue */
+            margin-top: 1.8em;
+            margin-bottom: 0.8em;
+            font-weight: 700;
+        }
+
+        .content h3 {
+            font-size: 1.25em;
+            border-left: 4px solid #3498db;
+            padding-left: 12px;
+        }
+
+        .content ul,
+        .content ol {
+            padding-left: 25px;
+            margin-bottom: 1.5em;
+        }
+
+        .content li {
+            margin-bottom: 8px;
+            position: relative;
+        }
+
+        .content strong {
+            color: #0066cc;
+            /* Strong Blue */
+            font-weight: 700;
+        }
+
+        .content pre {
+            background: #1e293b;
+            /* Dark Navy for code background */
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-size: 0.9em;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .content code {
+            font-family: 'Consolas', 'Monaco', monospace;
+            background: #edf2f7;
+            padding: 3px 6px;
+            border-radius: 4px;
+            color: #2b6cb0;
+            /* Blue code text */
+            font-size: 0.9em;
+        }
+
+        .content pre code {
+            background: transparent;
+            color: inherit;
+            padding: 0;
+            font-size: 1em;
+        }
+
+        .content blockquote {
+            border-left: 4px solid #63b3ed;
+            margin: 20px 0;
+            padding: 15px 25px;
+            color: #4a5568;
+            background: #ebf8ff;
+            border-radius: 0 8px 8px 0;
+            font-style: italic;
+        }
+
+        .content a {
+            color: #3182ce;
+            text-decoration: none;
+            border-bottom: 1px dotted #3182ce;
+        }
+
+        .content a:hover {
+            border-bottom: 1px solid #3182ce;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 60px;
+            color: #a0aec0;
+            font-size: 0.9em;
+            border-top: 1px solid #e1e8ed;
+            padding-top: 30px;
+        }
+
+        .error-box {
+            color: #c53030;
+            padding: 20px;
+            background: #fff5f5;
+            border: 1px solid #feb2b2;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Latest Tool Updates</h1>
+    <p style="text-align: center; color: #718096; margin-bottom: 50px;">
+        Generated on <span>Thu, 1 Jan 2026 23:12:51</span>
+    </p>
+
+    <div class="tool-update">
+        <div class="tool-header">
+            <h2 class="tool-name">azure-devops</h2>
+            <span class="meta-info">46441ms</span>
+        </div>
+
+        <div class="content">
+            <div>The following updates cover the most significant Azure DevOps developments from <strong>December 2025</strong> through <strong>January 1, 2026</strong>.<br/><br/><h3><strong>🚨 Top Headlines (Critical Impact)</strong></h3><br/><br/>| Date | Impact | Summary | Action Item |
+| :--- | :--- | :--- | :--- |
+| <strong>Dec 14, 2025</strong> | <strong>Critical</strong> | <strong>Global Personal Access Token (PAT) Retirement Announced</strong>&lt;br&gt;Microsoft announced the retirement of Global PATs to improve security. New Global PAT creation will be blocked starting <strong>March 15, 2026</strong>, and existing tokens will stop working on <strong>December 1, 2026</strong>. | <strong>Audit your PATs now.</strong> Identify any "Global" scoped tokens and plan to replace them with Organization-specific PATs or move to Entra ID (Service Principals/Managed Identities). |
+| <strong>Dec 09, 2025</strong> | <strong>Major</strong> | <strong>Azure DevOps Server 2025 General Availability (GA)</strong>&lt;br&gt;The latest on-premises version is now GA, featuring full support for <strong>SQL Server 2025</strong> and rolling up all features from recent cloud sprints (including New Boards Hub). | <strong>Plan your upgrade.</strong> If you are on Server 2022 or older, review the [release notes](https://learn.microsoft.com/en-us/azure/devops/server/release-notes/azuredevops2025) and verify hardware/SQL compatibility. |<br/><br/>---<br/><br/><h3><strong>🚀 Service Updates (Sprint 266) – Released Dec 19, 2025</strong></h3><br/><br/>#### <strong>Azure Pipelines</strong>
+<ul><li>  <strong>Clearer Artifact Selection for YAML CD</strong>: A new deployment panel UI now guides users to configure parameters *before* selecting the pipeline artifact. This prevents errors where the wrong artifact (e.g., from a different branch) was deployed because parameters weren't set first.</li>
+<li>  <strong>macOS-13 Image Retirement</strong>: As of December 2025, the <code>macOS-13</code> hosted agent image is retired. Pipelines using this image will fail.</li>
+    </ul>*   <strong>Action</strong>: Update your YAML to use <code>macOS-14</code> or <code>macOS-latest</code>.<br/><br/>#### <strong>Azure Repos</strong>
+<ul><li>  <strong>TFVC Policy Deprecation</strong>: The ability to save or modify "obsolete" Team Foundation Version Control (TFVC) policies has been disabled. Existing policies continue to work, but you cannot create new ones of these deprecated types.</li>
+    </ul>*   <strong>Action</strong>: Teams still using TFVC should review their branch policies and consider migrating to Git or updated policy configurations.<br/><br/>#### <strong>Azure Test Plans</strong>
+<ul><li>  <strong>New Test Run Hub GA (Jan 2026)</strong>: The modernized "Test Run" hub is moving to General Availability throughout January. It unifies manual and automated test results into a faster, more accessible view.</li>
+<li>  <strong>Associate Test Cases from Work Items</strong>: You can now directly link and create test cases from within a User Story or Bug work item without leaving the board, streamlining the workflow between devs and QAs.</li><br/><br/></ul>#### <strong>Security (GitHub Advanced Security for Azure DevOps)</strong>
+<ul><li>  <strong>Rust &amp; C/C++ Scanning</strong>: Code Scanning now natively supports <strong>Rust</strong>. Additionally, "Buildless" scanning is now available for <strong>C/C++</strong>, allowing security scans without requiring a full compilation of the codebase.</li>
+<li>  <strong>Secret Metadata API</strong>: A new API endpoint provides richer metadata for detected secrets, helping teams classify severity and risk more effectively programmatically.</li><br/><br/></ul>---<br/><br/><h3><strong>📅 Upcoming &amp; Ongoing</strong></h3><br/><br/><ul><li>  <strong>New Boards Hub Rollout</strong>: By <strong>Q1 2026</strong>, the "New Boards Hub" experience is expected to become the mandatory default for essentially all users, with the "revert to old boards" toggle being removed for remaining organizations.</li>
+<li>  <strong>OAuth App Registration Block</strong>: As a reminder, new Azure DevOps OAuth app registrations have been blocked since April 2025. Ensure any new tool integrations use <strong>Microsoft Entra ID</strong> (formerly Azure AD) authentication.</li><br/><br/></ul><h3><strong>Summary of Actions for DevOps Engineers</strong></h3>
+1.  <strong>Security Sweep</strong>: immediately identify Global PATs in your organization.
+2.  <strong>Pipeline Maintenance</strong>: Check <code>vmImage</code> references in YAML files to ensure no deprecated <code>macOS-13</code> or <code>windows-2019</code> agents are in use.
+3.  <strong>Server Upgrade</strong>: If hosting on-prem, schedule a review of the Azure DevOps Server 2025 requirements.</div>
+            
+        </div>
+    </div>
+
+    <div class="tool-update">
+        <div class="tool-header">
+            <h2 class="tool-name">playwright</h2>
+            <span class="meta-info">40998ms</span>
+        </div>
+
+        <div class="content">
+            <div>As of <strong>January 1, 2026</strong>, the following report covers the most significant Playwright ecosystem developments from <strong>December 2025</strong> and late <strong>November 2025</strong>.<br/><br/><h3>🚀 Top Headlines</h3><br/><br/><ul><li>  <strong>Framework Update:</strong> <strong>Playwright v1.57</strong> is the current stable release, introducing a major shift to "Chrome for Testing" binaries and new performance analysis tools.</li>
+<li>  <strong>New Tooling:</strong> <strong>Playwright MCP Server</strong> (Model Context Protocol) saw multiple releases in December, enabling AI agents (like GitHub Copilot and Claude) to autonomously drive browsers for testing.</li>
+<li>  <strong>Performance:</strong> A new <strong>"Speedboard"</strong> tab in the HTML reporter helps engineers instantly identify and optimize slow-running tests.</li><br/><br/></ul>---<br/><br/><h3>📅 Latest News &amp; Updates</h3><br/><br/>#### 1. Playwright v1.57 Release
+<strong>Date:</strong> Late November 2025 (Current Stable Version)
+<strong>Source:</strong> [GitHub Release Notes](https://github.com/microsoft/playwright/releases) &amp; Official Blog
+<strong>Impact:</strong> <strong>Major</strong><br/><br/><ul><li>  <strong>Chrome for Testing Switch:</strong> Playwright has switched its default browser binary from standard "Chromium" to <strong>"Chrome for Testing"</strong>. This Google-supported flavor of Chrome is designed specifically for automation, offering higher fidelity to the real Google Chrome browser while maintaining a consistent versioned environment.</li>
+<li>  <strong>"Speedboard" Reporter Tab:</strong> The HTML reporter now includes a "Speedboard" tab that visualizes test execution times. It sorts tests by duration, making it easier to spot bottlenecks and "slowest tests" in your suite.</li>
+<li>  <strong>Smart WebServer Waiting:</strong> The <code>webServer</code> config now supports a <code>wait</code> property that accepts a Regular Expression (e.g., <code>/Listening on port \d+/</code>). This allows Playwright to wait for a specific console log message before starting tests, which is ideal for servers that don't expose a simple HTTP health check endpoint.</li>
+<li>  <strong>Locator Descriptions:</strong> You can now use <code>locator.describe("Submit Button")</code> to add custom labels to your locators. These labels appear in the Trace Viewer and error logs, making debugging significantly more readable than raw CSS/XPath selectors.</li><br/><br/></ul><strong>Action Items:</strong>
+<ul><li>  <strong>Upgrade:</strong> Run <code>npm install -D @playwright/test@latest</code> and <code>npx playwright install</code> to get the new binaries.</li>
+<li>  <strong>Verify:</strong> Ensure your CI pipelines accept the new "Chrome for Testing" binary paths (usually handled automatically by the Playwright install command).</li>
+<li>  <strong>Refactor:</strong> Replace complex <code>webServer</code> timeouts with the new regex-based <code>wait</code> property for faster and more reliable CI starts.</li><br/><br/></ul>#### 2. Playwright MCP Server (AI Integration)
+<strong>Date:</strong> December 2025 (Versions 1.0.8 - 1.0.12)
+<strong>Source:</strong> [Playwright MCP GitHub](https://github.com/microsoft/playwright-mcp-server)
+<strong>Impact:</strong> <strong>Major (for AI workflows)</strong><br/><br/><ul><li>  <strong>Summary:</strong> Microsoft released the <strong>Playwright Model Context Protocol (MCP) Server</strong>, a tool that allows AI assistants (like Claude Desktop or GitHub Copilot) to connect to and control a Playwright browser session.</li>
+<li>  <strong>Recent Updates:</strong></li>
+    </ul>*   <strong>Auto-Install:</strong> The server now automatically detects and installs missing browsers (Chromium, Firefox, WebKit) without manual user intervention.
+    *   <strong>Enhanced Auth:</strong> Added support for Bearer tokens and custom headers, allowing AI agents to test authenticated routes more easily.
+    *   <strong>Security:</strong> Removed shell execution capabilities to make the browser-driving process safer when triggered by AI.<br/><br/><strong>Action Items:</strong>
+<ul><li>  <strong>Experiment:</strong> If you use AI coding assistants, install the Playwright MCP server to let your AI agent "see" and "click" through your app to generate tests or debug issues.</li><br/><br/></ul>#### 3. Breaking Changes &amp; Deprecations
+<strong>Date:</strong> v1.57 Release
+<strong>Source:</strong> Official Changelog
+<strong>Impact:</strong> <strong>Critical</strong><br/><br/><ul><li>  <strong><code>page.accessibility</code> Removed:</strong> The <code>page.accessibility</code> API, which had been deprecated for 3 years, has been officially removed.</li>
+<li>  <strong>Action Item:</strong> If you still have legacy tests using <code>page.accessibility.snapshot()</code>, migrate them immediately to the <code>@axe-core/playwright</code> community package for accessibility testing.</li><br/><br/></ul>---<br/><br/><h3>💡 Quick Tips for Test Engineers</h3><br/><br/><ul><li>  <strong>Trace Viewer Upgrade:</strong> With v1.57, use the new <code>locator.describe()</code> feature to annotate your most critical buttons and inputs. When a test fails, the Trace Viewer will show "Clicked 'Submit Button'" instead of "Clicked locator('button[type="submit"]')", making it easier for non-devs to understand reports.</li>
+<li>  <strong>Performance Auditing:</strong> Open your latest HTML report and click the <strong>Speedboard</strong> tab. Pick your top 3 slowest tests and investigate if they are using excessive <code>waitForTimeout</code> or inefficient selectors.</li><br/><br/></ul><h3>📦 Ecosystem Watch</h3>
+<ul><li>  <strong>Community:</strong> The "Cypress vs Playwright Advent Calendar 2025" (Dec 2025) sparked discussions on migration strategies, highlighting Playwright's increasing adoption in enterprise environments due to its parallel execution speed.</li>
+<li>  <strong>Adoption:</strong> Recent stats show Playwright surpassing 45% adoption among QA professionals, driven by its speed (42% faster than Cypress in headless mode according to recent benchmarks).</li></ul></div>
+            
+        </div>
+    </div>
+
+    <div class="tool-update">
+        <div class="tool-header">
+            <h2 class="tool-name">saucelabs</h2>
+            <span class="meta-info">32751ms</span>
+        </div>
+
+        <div class="content">
+            <div>Based on the most recent updates from December 2025, here are the significant developments for the SauceLabs platform.<br/><br/><strong>Date</strong>: January 1, 2026
+<strong>Report Scope</strong>: December 2025 - January 1, 2026<br/><br/><h3>🚀 <strong>Top Stories: Critical Platform Updates</strong></h3><br/><br/>#### <strong>1. General Availability of iOS 26 Simulators</strong>
+<ul><li>  <strong>Date:</strong> December 19, 2025</li>
+<li>  <strong>Impact:</strong> <strong>Critical</strong></li>
+<li>  <strong>Summary:</strong> Sauce Labs has released full support for <strong>iOS 26 Simulators</strong> on the Virtual Device Cloud. This update includes support for the new <strong>iPhone 17, iPhone 17 Pro/Max, and iPhone Air</strong>, as well as the new "Liquid Glass" design language introduced by Apple.</li>
+<li>  <strong>Action Items:</strong></li>
+    </ul>*   <strong>Update Appium:</strong> Ensure your test framework is using Appium Server 2.19.0 and XCUITest Driver 9.10.5 or newer to support iOS 26.
+    *   <strong>Verify UI Elements:</strong> QA teams should prioritize visual testing on the new "Liquid Glass" transparent elements to ensure rendering accuracy on the new ARM cloud infrastructure.
+    *   <strong>Test Coverage:</strong> Add iPhone 17 and iPhone Air configurations to your regression suites immediately.<br/><br/>#### <strong>2. Sauce AI for Insights (General Availability)</strong>
+<ul><li>  <strong>Date:</strong> Late November / Early December 2025</li>
+<li>  <strong>Impact:</strong> <strong>Major</strong></li>
+<li>  <strong>Summary:</strong> Sauce AI for Insights is now generally available. This AI agent analyzes test data across the platform to identify root causes of failures up to 100x faster than manual investigation. It correlates logs, videos, and error messages to provide natural language explanations for test breakages.</li>
+<li>  <strong>Action Items:</strong></li>
+    </ul>*   <strong>Enable Insights:</strong> Check your dashboard for the "Sauce AI" tab and enable it for your primary projects.
+    *   <strong>Pilot Analysis:</strong> Use the AI agent to triage your "flaky" test suite first to identify patterns that manual review might have missed.<br/><br/>---<br/><br/><h3>🛠 <strong>SDK &amp; Tooling Updates</strong></h3><br/><br/>#### <strong>3. SDK Updates for Unity and Android</strong>
+<ul><li>  <strong>Date:</strong> December 12, 2025</li>
+<li>  <strong>Impact:</strong> <strong>Major</strong></li>
+<li>  <strong>Summary:</strong> Significant updates to Error Reporting SDKs. The Unity integration now uses modern Apple-native packaging for better Swift runtime handling. Android SDK updates resolve crash handler issues with split APKs and Play Asset Delivery.</li>
+<li>  <strong>Action Items:</strong></li>
+    </ul>*   <strong>Mobile Engineers:</strong> Upgrade <code>backtrace-unity</code> to v3.15.0 and <code>backtrace-android</code> to v3.10.6.
+    *   <strong>Verify Reporting:</strong> Trigger a controlled crash in a staging build to verify the new reporting pipeline is capturing native crashes correctly.<br/><br/>#### <strong>4. <code>saucectl</code> CLI Update (v0.197.4)</strong>
+<ul><li>  <strong>Date:</strong> December 16, 2025</li>
+<li>  <strong>Impact:</strong> <strong>Minor</strong></li>
+<li>  <strong>Summary:</strong> A maintenance release for the Sauce Labs command-line interface (<code>saucectl</code>) including bug fixes and stability improvements for test orchestration.</li>
+<li>  <strong>Action Items:</strong></li>
+    </ul>*   <strong>CI/CD Maintenance:</strong> Update your CI pipeline scripts to pull the latest version of <code>saucectl</code> to ensure stability.<br/><br/>---<br/><br/><h3>🌐 <strong>Browser &amp; Environment Support</strong></h3><br/><br/>#### <strong>5. New Browser Versions Available</strong>
+<ul><li>  <strong>Date:</strong> Mid-December 2025</li>
+<li>  <strong>Impact:</strong> <strong>Moderate</strong></li>
+<li>  <strong>Summary:</strong> The Virtual Device Cloud now supports the latest browser versions:</li>
+    </ul>*   <strong>Chrome 143</strong>
+    *   <strong>Firefox 146</strong>
+    *   <strong>Microsoft Edge 143</strong>
+<ul><li>  <strong>Action Items:</strong></li>
+    </ul>*   <strong>Cross-Browser Testing:</strong> Update your platform configurator capabilities to include these versions for upcoming release validations.<br/><br/>---<br/><br/><h3>⚠️ <strong>Important Deprecations &amp; Notices</strong></h3>
+<ul><li>  <strong>Appium Version Requirements:</strong> With the release of iOS 26, older Appium versions may experience compatibility issues. Teams are strongly advised to migrate to <strong>Appium Server 2.19+</strong>.</li>
+<li>  <strong>Legacy Device Support:</strong> Note that iOS 16.4 is now the final supported version for iPhone 8/X models on the platform.</li></ul></div>
+            
+        </div>
+    </div>
+
+    <div class="tool-update">
+        <div class="tool-header">
+            <h2 class="tool-name">selenium-java</h2>
+            <span class="meta-info">45800ms</span>
+        </div>
+
+        <div class="content">
+            <div>Based on the latest ecosystem updates as of <strong>January 1, 2026</strong>, here are the most significant developments for Selenium Java test engineers.<br/><br/><h3>🚨 <strong>Headline: Selenium 4.39.0 Released</strong></h3>
+<strong>Date:</strong> December 6, 2025  
+<strong>Source:</strong> SeleniumHQ GitHub / Maven Central  
+<strong>Impact:</strong> <strong>Major</strong><br/><br/>The Selenium project has released version <strong>4.39.0</strong>, continuing its monthly release cadence. This update focuses on stabilizing WebDriver BiDi implementation and enhancing the Selenium Grid user experience.<br/><br/><ul><li>  <strong>Key Java Binding Updates:</strong></li>
+    </ul>*   <strong>BiDi <code>downloadEnd</code> Event:</strong> The Java bindings now support the <code>browsingContext.downloadEnd</code> event, allowing for more robust file download testing without relying on file system polling.
+    *   <strong>Tracing Spans Fix:</strong> Fixed a logic issue where tracing spans were logged even when the log level was not set to loggable, reducing log noise in CI environments.
+    *   <strong>Dependency Updates:</strong> Internal dependencies have been updated, including a bump to Bazel v7.4.1 for the build system, ensuring compatibility with the latest Java development environments.<br/><br/><ul><li>  <strong>Action Item:</strong> Update your <code>pom.xml</code> or <code>build.gradle</code> to version <code>4.39.0</code>. Verify file download tests using the new BiDi event listener if you are migrating away from legacy download verification methods.</li><br/><br/></ul>---<br/><br/><h3>🌐 <strong>Browser Driver Updates: Chrome 143 &amp; Edge 143</strong></h3>
+<strong>Date:</strong> Late December 2025  
+<strong>Source:</strong> Chrome for Testing / Edge Developer  
+<strong>Impact:</strong> <strong>Critical</strong><br/><br/>With the release of <strong>Chrome 143</strong> and <strong>Edge 143</strong>, corresponding driver updates are mandatory.<br/><br/><ul><li>  <strong>ChromeDriver 143:</strong> Full support for Chrome 143. Note that with the "Chrome for Testing" initiative, ensure your CI pipelines are targeting the correct <code>143.x</code> binary endpoints if you manage drivers manually.</li>
+<li>  <strong>BiDi Support:</strong> Chrome 143 includes further enhancements to the WebDriver BiDi protocol, which Selenium 4.39.0 leverages for network interception and DOM mutation events.</li><br/><br/><li>  <strong>Action Item:</strong> If you use <code>Selenium Manager</code> (included in Selenium 4.x), this update should happen automatically. If you manually manage <code>chromedriver</code> binaries, update to version <strong>143.0.x</strong> immediately to avoid session creation failures.</li><br/><br/></ul>---<br/><br/><h3>⚡ <strong>Selenium Grid Enhancements</strong></h3>
+<strong>Date:</strong> December 2025 (v4.39.0)  
+<strong>Source:</strong> Selenium GitHub  
+<strong>Impact:</strong> <strong>Minor (Quality of Life)</strong><br/><br/><ul><li>  <strong>UI Theme Integration:</strong> The Selenium Grid UI has received a visual update with better theme integration.</li>
+<li>  <strong>Status Indicators:</strong> Improved status indicators for Nodes in the Grid console make it easier to identify unhealthy or draining nodes at a glance.</li>
+<li>  <strong>Caffeine Cache Migration:</strong> The Grid codebase has migrated from Guava's CacheBuilder to <strong>Caffeine</strong>, offering better performance for session mapping and caching mechanisms in high-load Grids.</li><br/><br/></ul>---<br/><br/><h3>⚠️ <strong>Breaking Changes &amp; Deprecations</strong></h3>
+<strong>Date:</strong> Ongoing (Late 2025)  
+<strong>Impact:</strong> <strong>Major</strong><br/><br/><ul><li>  <strong>Firefox CDP Removal:</strong> As announced earlier in 2025, support for Chrome DevTools Protocol (CDP) features in Firefox is being actively removed in favor of <strong>WebDriver BiDi</strong>. If your framework relies on <code>DevTools</code> classes for Firefox network mocking or console log retrieval, you <strong>must</strong> migrate to the equivalent BiDi APIs.</li>
+<li>  <strong>Java Version Support:</strong> While Selenium 4.x officially supports Java 11+, the build ecosystem and recent contributions suggest a strong shift toward <strong>Java 17</strong> as the recommended LTS version for stability and performance.</li><br/><br/></ul>---<br/><br/><h3>📅 <strong>Upcoming Events</strong></h3>
+<ul><li>  <strong>SeleniumConf 2026:</strong> Scheduled for <strong>May 06–08, 2026</strong>. Registrations are now open. This is likely where the roadmap for <strong>Selenium 5.0</strong> will be discussed.</li><br/><br/></ul><h3><strong>Summary of Actionable Steps</strong></h3>
+1.  <strong>Upgrade:</strong> Bump <code>selenium-java</code> to <code>4.39.0</code>.
+2.  <strong>Verify:</strong> Check <code>chromedriver</code> is version <code>143</code>.
+3.  <strong>Refactor:</strong> Audit your code for Firefox CDP usage and replace with BiDi network interceptors.
+4.  <strong>Monitor:</strong> Watch for "Download End" event implementation in your download tests.</div>
+            
+        </div>
+    </div>
+
+    <div class="tool-update">
+        <div class="tool-header">
+            <h2 class="tool-name">spring-boot</h2>
+            <span class="meta-info">30794ms</span>
+        </div>
+
+        <div class="content">
+            <div><h3><strong>Spring Boot Ecosystem News Report</strong></h3>
+<strong>Date:</strong> January 1, 2026
+<strong>Scope:</strong> December 2025 (Last 30 Days)<br/><br/>Significant developments have occurred in the Spring ecosystem over the last month, headlined by the first maintenance release of the new <strong>Spring Boot 4.0</strong> generation and a critical supply chain security warning.<br/><br/>---<br/><br/><h3><strong>🚨 Critical Security Alerts</strong></h3><br/><br/>#### <strong>Supply Chain Attack: Malicious "Jackson" Dependency</strong>
+<ul><li>  <strong>Date:</strong> December 30, 2025</li>
+<li>  <strong>Source:</strong> Cybersecurity News / Maven Central Security</li>
+<li>  <strong>Impact:</strong> <strong>CRITICAL</strong></li>
+<li>  <strong>Summary:</strong> Security researchers identified a malicious package on Maven Central masquerading as the legitimate <code>jackson-core</code> library (typosquatting). The malware targets Spring Boot applications by detecting <code>ApplicationRunner</code> classes and executing a payload upon startup. The package uses a fake domain (<code>fasterxml.org</code> vs the real <code>fasterxml.com</code>) and was active for a short window before removal.</li>
+<li>  <strong>Action Items:</strong></li>
+    </ul>*   Audit your <code>pom.xml</code> / <code>build.gradle</code> immediately for any dependencies referencing <code>fasterxml.org</code> or suspicious Jackson variants.
+    *   Run a dependency tree check (<code>mvn dependency:tree</code> or <code>gradle dependencies</code>) to ensure no rogue transitive dependencies were pulled in.<br/><br/>---<br/><br/><h3><strong>🚀 Major Releases &amp; Updates</strong></h3><br/><br/>#### <strong>Spring Boot 4.0.1 Released</strong>
+<ul><li>  <strong>Date:</strong> December 18, 2025</li>
+<li>  <strong>Source:</strong> Spring.io Blog</li>
+<li>  <strong>Impact:</strong> <strong>Major</strong></li>
+<li>  <strong>Summary:</strong> This is the first patch release for the recently launched Spring Boot 4.0 generation. It builds on <strong>Spring Framework 7.0</strong> and includes critical bug fixes, improved null-safety (JSpecify integration), and refinements to the new modular auto-configuration structure.</li>
+<li>  <strong>Context:</strong> Spring Boot 4.0 (released late Nov 2025) introduced support for <strong>Java 25</strong>, a modularized <code>spring-boot-autoconfigure</code>, and native support for API versioning.</li>
+<li>  <strong>Action Items:</strong></li>
+    </ul>*   Teams already on 4.0.0 should upgrade to 4.0.1 immediately for stability fixes.
+    *   Teams on 3.x should begin planning migration to 4.x, noting the baseline upgrade to Java 17/21+.<br/><br/>#### <strong>Spring Boot 3.4.13 &amp; 3.5.9 Maintenance Releases</strong>
+<ul><li>  <strong>Date:</strong> December 18, 2025</li>
+<li>  <strong>Source:</strong> Spring.io Blog</li>
+<li>  <strong>Impact:</strong> <strong>Minor</strong></li>
+<li>  <strong>Summary:</strong> Routine maintenance releases for the 3.x branches. These updates patch minor bugs and upgrade dependencies (including Spring Framework 6.2.15) to ensure continued stability for applications not yet ready for Spring Boot 4.</li>
+<li>  <strong>Action Items:</strong></li>
+    </ul>*   Update existing 3.x applications to these latest patch versions to consume the latest security fixes in transitive dependencies.<br/><br/>---<br/><br/><h3><strong>☁️ Ecosystem &amp; Features</strong></h3><br/><br/>#### <strong>Spring Cloud 2025.0.1 ("Northfields") Released</strong>
+<ul><li>  <strong>Date:</strong> December 17, 2025</li>
+<li>  <strong>Source:</strong> Spring.io Blog</li>
+<li>  <strong>Impact:</strong> <strong>Major</strong></li>
+<li>  <strong>Summary:</strong> The first service release for the Spring Cloud 2025 release train. It provides compatibility with Spring Boot 4.0.x and updates core modules like Spring Cloud Gateway and OpenFeign to support the new Spring Framework 7 reactive stack.</li>
+<li>  <strong>Action Items:</strong></li>
+    </ul>*   If upgrading to Spring Boot 4, you <strong>must</strong> upgrade your Spring Cloud BOM to <code>2025.0.1</code> to avoid binary incompatibility.<br/><br/>#### <strong>Spring Modulith 2.0.1 Released</strong>
+<ul><li>  <strong>Date:</strong> December 20, 2025</li>
+<li>  <strong>Source:</strong> Spring.io Blog</li>
+<li>  <strong>Impact:</strong> <strong>Minor</strong></li>
+<li>  <strong>Summary:</strong> A patch release for the modular monolith extension. It refines the application module detection algorithms and improves integration with the new Spring Boot 4 testing slice interfaces.</li><br/><br/></ul>---<br/><br/><h3><strong>💡 Developer Note</strong></h3>
+With the release of <strong>Spring Boot 4</strong>, the ecosystem is shifting baselines. The new generation modularizes the monolithic <code>spring-boot-autoconfigure</code> jar. If you are noticing <code>ClassNotFoundException</code> or missing beans after upgrading to 4.0, verify that you have imported the specific starter modules for your features, as "transitive magic" has been reduced for a smaller runtime footprint.</div>
+            
+        </div>
+    </div>
+
+    <div class="footer">
+        Powered by <strong>Gemini AI</strong> &bull; Total Processing Time: <span>46454</span>ms
+    </div>
+
+</body>
+
+</html>
