@@ -21,10 +21,11 @@ package org.ai.gemini.geminiai.dto;
  * @since 2026-01-01
  */
 public record ToolChangeResult(
-        String toolName,
-        String content,
-        Integer inputTokens,
-        Integer outputTokens,
-        Long processingTimeMs,
-        String status) {
+                String toolName,
+                String content,
+                String htmlContent,
+                Integer inputTokens,
+                Integer outputTokens,
+                Long processingTimeMs,
+                String status) {
 }

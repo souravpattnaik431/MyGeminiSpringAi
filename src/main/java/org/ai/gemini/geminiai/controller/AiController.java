@@ -6,6 +6,13 @@ import org.ai.gemini.geminiai.dto.ToolChangesRequest;
 import org.ai.gemini.geminiai.dto.ToolChangesResponse;
 import org.ai.gemini.geminiai.service.AiService;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
+import lombok.extern.slf4j.Slf4j;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * REST Controller for managing AI-powered tool change queries.
@@ -21,9 +28,11 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/gemini")
+@Slf4j
 public class AiController {
 
     private final AiService aiService;
+    private final TemplateEngine templateEngine;
 
     /**
      * Retrieves the latest changes for a single tool.
@@ -48,11 +57,29 @@ public class AiController {
      * @return ToolChangesResponse with individual results and aggregated statistics
      * @throws IllegalArgumentException if the tools list is null or empty
      */
-    @PostMapping("/getAllToolChanges")
-    public ToolChangesResponse getAllToolChanges(@RequestBody ToolChangesRequest request) {
+    @PostMapping(value = "/getAllToolChanges", produces = "text/html")
+    public String getAllToolChanges(@RequestBody ToolChangesRequest request) {
         if (request.tools() == null || request.tools().isEmpty()) {
             throw new IllegalArgumentException("Tools list cannot be empty");
         }
-        return aiService.getAllToolChanges(request.tools());
+
+        ToolChangesResponse response = aiService.getAllToolChanges(request.tools());
+
+        Context context = new Context();
+        context.setVariable("results", response.results());
+        context.setVariable("totalProcessingTimeMs", response.totalProcessingTimeMs());
+        context.setVariable("timestamp", java.time.LocalDateTime.now());
+
+        String htmlContent = templateEngine.process("tool-updates", context);
+
+        try {
+            Path path = Paths.get("latest_tool_updates.html");
+            Files.writeString(path, htmlContent);
+            log.info("Saved report to: {}", path.toAbsolutePath());
+        } catch (Exception e) {
+            log.error("Failed to save report to file", e);
+        }
+
+        return htmlContent;
     }
 }
