@@ -30,6 +30,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class AiService {
     private final ChatClient chatClient;
+    private final CreateHtmlReport createHtmlReport;
     private final ExecutorService executorService = new ThreadPoolExecutor(
             10, 20, 120L, TimeUnit.SECONDS,
             new ArrayBlockingQueue<>(100), new ThreadPoolExecutor.CallerRunsPolicy());
@@ -86,7 +87,7 @@ public class AiService {
                         Integer inputTokens = chatResponse.getMetadata().getUsage().getPromptTokens();
                         Integer outputTokens = chatResponse.getMetadata().getUsage().getCompletionTokens();
                         String outputFromAI = chatResponse.getResult().getOutput().getText();
-                        String htmlContent = convertMarkdownToHtml(outputFromAI);
+                        String htmlContent = createHtmlReport.convertMarkdownToHtml(outputFromAI);
 
                         log.info("Total input tokens for {}: {}", toolName, inputTokens);
                         log.info("Total output tokens for {}: {}", toolName, outputTokens);
@@ -117,54 +118,6 @@ public class AiService {
                 }
         }
 
-        private String convertMarkdownToHtml(String markdown) {
-                if (markdown == null)
-                        return "";
-
-                String html = markdown;
-
-                // Escape HTML (Minimal)
-                html = html.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
-
-                // Headers
-                html = html.replaceAll("(?m)^### (.*)$", "<h3>$1</h3>");
-                html = html.replaceAll("(?m)^## (.*)$", "<h2>$1</h2>");
-                html = html.replaceAll("(?m)^# (.*)$", "<h1>$1</h1>");
-
-                // Bold
-                html = html.replaceAll("\\*\\*(.*?)\\*\\*", "<strong>$1</strong>");
-
-                // Code Blocks
-                html = html.replaceAll("(?s)```(.*?)\\n(.*?)```", "<pre><code>$2</code></pre>");
-
-                // Inline Code
-                html = html.replaceAll("`(.*?)`", "<code>$1</code>");
-
-                // Tables (Basic support) - converting pipelines to table rows
-                // This is a very robust simplistic approach for standard Markdown tables
-                if (html.contains("|")) {
-                        html = html.replaceAll("(?m)^\\|(.*)\\|$", "<tr><td>$1</td></tr>");
-                        html = html.replace("<td>", "<td>").replace("|", "</td><td>");
-                        html = "<table>" + html + "</table>";
-                        // Cleanup table mess (this is very hacky but works for simple tables)
-                        html = html.replace("<table>", "<div class='table-wrapper'><table>").replace("</table>",
-                                        "</table></div>");
-                }
-
-                // Lists
-                // Handle * or - lists with optional indentation
-                html = html.replaceAll("(?m)^\\s*[*•-]\\s+(.*)$", "<li>$1</li>");
-
-                // Wrap lists (better heuristic)
-                // We use a temporary placeholder to identify blocks of LIs
-                html = html.replaceAll("((<li>.*</li>\\s*)+)", "<ul>$1</ul>");
-
-                // Paragraphs (double newlines to br, but not inside tags ideally)
-                // A safer bet for blog text is to just replace double newlines with breaks
-                html = html.replaceAll("(?m)\\n\\n", "<br/><br/>");
-
-                return html;
-        }
 
         /**
          * Retrieves tool changes for multiple tools in parallel.
