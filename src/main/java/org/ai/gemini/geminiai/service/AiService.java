@@ -31,7 +31,7 @@ import org.springframework.stereotype.Service;
 public class AiService {
     private final ChatClient chatClient;
     private final ExecutorService executorService = new ThreadPoolExecutor(
-            10, 20, 60L, TimeUnit.SECONDS,
+            10, 20, 120L, TimeUnit.SECONDS,
             new ArrayBlockingQueue<>(100), new ThreadPoolExecutor.CallerRunsPolicy());
 
     private final ResourceLoader resourceLoader;
