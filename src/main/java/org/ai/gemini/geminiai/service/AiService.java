@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.ai.gemini.geminiai.dto.ToolChangeResult;
 import org.ai.gemini.geminiai.dto.ToolChangesResponse;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.metadata.ChatResponseMetadata;
 import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.chat.prompt.PromptTemplate;
@@ -57,7 +58,7 @@ public class AiService {
      *
      * @param toolName Name of the tool to query
      * @return ToolChangeResult containing content, tokens, processing time, and
-     *         status
+     * status
      */
     public ToolChangeResult getToolChangesWithMetadata(String toolName) {
         long startTime = System.currentTimeMillis();
@@ -72,105 +73,106 @@ public class AiService {
             ChatResponse chatResponse = chatClient.prompt(prompt).call().chatResponse();
             long processingTime = System.currentTimeMillis() - startTime;
 
-                        if (chatResponse == null) {
-                                log.error("Empty chat response for tool: {}", toolName);
-                                return new ToolChangeResult(
-                                                toolName,
-                                                "Empty Chat Response from AI",
-                                                "",
-                                                null,
-                                                null,
-                                                processingTime,
-                                                "ERROR");
-                        }
+            if (chatResponse == null) {
+                log.error("Empty chat response for tool: {}", toolName);
+                return new ToolChangeResult(
+                        toolName,
+                        "Empty Chat Response from AI",
+                        "",
+                        null,
+                        null,
+                        processingTime,
+                        "ERROR");
+            }
 
-                        Integer inputTokens = chatResponse.getMetadata().getUsage().getPromptTokens();
-                        Integer outputTokens = chatResponse.getMetadata().getUsage().getCompletionTokens();
-                        String outputFromAI = chatResponse.getResult().getOutput().getText();
-                        String htmlContent = createHtmlReport.convertMarkdownToHtml(outputFromAI);
+            ChatResponseMetadata metadata = chatResponse.getMetadata();
+            Integer inputTokens = metadata.getUsage().getPromptTokens();
+            Integer outputTokens = metadata.getUsage().getCompletionTokens();
+            String outputFromAI = chatResponse.getResult().getOutput().getText();
+            String htmlContent = createHtmlReport.convertMarkdownToHtml(outputFromAI);
 
-                        log.info("Total input tokens for {}: {}", toolName, inputTokens);
-                        log.info("Total output tokens for {}: {}", toolName, outputTokens);
-                        log.info("Content for {}: \n{}", toolName, outputFromAI);
-                        log.info("Processing time for {}: {}ms", toolName, processingTime);
+            log.info("Total input tokens for {}: {}", toolName, inputTokens);
+            log.info("Total output tokens for {}: {}", toolName, outputTokens);
+            log.info("Content for {}: \n{}", toolName, outputFromAI);
+            log.info("Processing time for {}: {}ms", toolName, processingTime);
 
-                        return new ToolChangeResult(
-                                        toolName,
-                                        outputFromAI,
-                                        htmlContent,
-                                        inputTokens,
-                                        outputTokens,
-                                        processingTime,
-                                        "SUCCESS");
+            return new ToolChangeResult(
+                    toolName,
+                    outputFromAI,
+                    htmlContent,
+                    inputTokens,
+                    outputTokens,
+                    processingTime,
+                    "SUCCESS");
 
-                } catch (Exception e) {
-                        long processingTime = System.currentTimeMillis() - startTime;
-                        log.error("Exception in getting chat response from AI for tool {}: {}", toolName,
-                                        e.getMessage());
-                        return new ToolChangeResult(
-                                        toolName,
-                                        "Error: " + e.getMessage(),
-                                        "",
-                                        null,
-                                        null,
-                                        processingTime,
-                                        "ERROR");
-                }
+        } catch (Exception e) {
+            long processingTime = System.currentTimeMillis() - startTime;
+            log.error("Exception in getting chat response from AI for tool {}: {}", toolName,
+                    e.getMessage());
+            return new ToolChangeResult(
+                    toolName,
+                    "Error: " + e.getMessage(),
+                    "",
+                    null,
+                    null,
+                    processingTime,
+                    "ERROR");
         }
+    }
 
 
-        /**
-         * Retrieves tool changes for multiple tools in parallel.
-         * <p>
-         * This method processes multiple tool queries concurrently using a thread pool,
-         * aggregates the results, and calculates total token usage and processing time.
-         * </p>
-         *
-         * @param tools List of tool names to query
-         * @return ToolChangesResponse with individual results and aggregated statistics
-         */
-        public ToolChangesResponse getAllToolChanges(List<String> tools) {
-                long startTime = System.currentTimeMillis();
-                List<ToolChangeResult> allResults = new ArrayList<>();
+    /**
+     * Retrieves tool changes for multiple tools in parallel.
+     * <p>
+     * This method processes multiple tool queries concurrently using a thread pool,
+     * aggregates the results, and calculates total token usage and processing time.
+     * </p>
+     *
+     * @param tools List of tool names to query
+     * @return ToolChangesResponse with individual results and aggregated statistics
+     */
+    public ToolChangesResponse getAllToolChanges(List<String> tools) {
+        long startTime = System.currentTimeMillis();
+        List<ToolChangeResult> allResults = new ArrayList<>();
 
-                for (int i = 0; i < tools.size(); i += batchSize) {
-                        List<String> batch = tools.subList(i, Math.min(i + batchSize, tools.size()));
+        for (int i = 0; i < tools.size(); i += batchSize) {
+            List<String> batch = tools.subList(i, Math.min(i + batchSize, tools.size()));
 
-                        List<CompletableFuture<ToolChangeResult>> futures = batch.stream()
-                                        .map(tool -> CompletableFuture
-                                                        .supplyAsync(() -> getToolChangesWithMetadata(tool),
-                                                                        executorService)
-                                                        .completeOnTimeout(
-                                                                        new ToolChangeResult(
-                                                                                        tool,
-                                                                                        "Request timed out",
-                                                                                        "",
-                                                                                        null,
-                                                                                        null,
-                                                                                        individualTimeout * 1000,
-                                                                                        "TIMEOUT"),
-                                                                        individualTimeout,
-                                                                        TimeUnit.SECONDS))
-                                        .toList();
+            List<CompletableFuture<ToolChangeResult>> futures = batch.stream()
+                    .map(tool -> CompletableFuture
+                            .supplyAsync(() -> getToolChangesWithMetadata(tool),
+                                    executorService)
+                            .completeOnTimeout(
+                                    new ToolChangeResult(
+                                            tool,
+                                            "Request timed out",
+                                            "",
+                                            null,
+                                            null,
+                                            individualTimeout * 1000,
+                                            "TIMEOUT"),
+                                    individualTimeout,
+                                    TimeUnit.SECONDS))
+                    .toList();
 
-                        try {
-                                CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).get(batchTimeout,
-                                                TimeUnit.SECONDS);
-                        } catch (Exception e) {
-                                log.warn("Batch partial failure: {}", e.getMessage());
-                        }
+            try {
+                CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).get(batchTimeout,
+                        TimeUnit.SECONDS);
+            } catch (Exception e) {
+                log.warn("Batch partial failure: {}", e.getMessage());
+            }
 
-                        allResults.addAll(futures.stream().map(f -> f.getNow(
-                                        new ToolChangeResult(
-                                                        "UNKNOWN",
-                                                        "Failed to retrieve result",
-                                                        "",
-                                                        null,
-                                                        null,
-                                                        null,
-                                                        "ERROR")))
-                                        .toList());
-                }
+            allResults.addAll(futures.stream().map(f -> f.getNow(
+                            new ToolChangeResult(
+                                    "UNKNOWN",
+                                    "Failed to retrieve result",
+                                    "",
+                                    null,
+                                    null,
+                                    null,
+                                    "ERROR")))
+                    .toList());
+        }
 
         long totalTime = System.currentTimeMillis() - startTime;
 
