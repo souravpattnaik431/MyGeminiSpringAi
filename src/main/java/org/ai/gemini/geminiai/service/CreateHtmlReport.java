@@ -152,7 +152,7 @@ public class CreateHtmlReport {
 
     private boolean isSeparatorRow(String line) {
         return line.matches("^\\|[\\s:-]+\\|$")
-                || line.matches("^\\|\\s*:?-+:?\\s*(\\|\\s*:?-+:?\\s*)*\\|$");
+                || line.matches("^\\|\\s*:?-+:?\\s*(\\|\\s*:?-+:?\\s*)*+\\|$");
     }
 
     private void processNonTableRow(String line, StringBuilder result, ConversionContext ctx) {
