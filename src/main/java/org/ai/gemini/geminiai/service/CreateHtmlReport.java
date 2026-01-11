@@ -9,6 +9,7 @@ import static org.ai.gemini.geminiai.constants.HtmlConstants.DIV_NEWLINE;
 public class CreateHtmlReport {
     /**
      * convert the AI Markdown output to HTML file
+     * 
      * @param markdown mention the Markdown output
      * @return HTML output
      */
@@ -68,54 +69,18 @@ public class CreateHtmlReport {
      */
     public String convertMarkdownTablesToDivs(String markdown) {
         String markdown1 = getMarkDown(markdown);
-        if (markdown1 != null) return markdown1;
+        if (markdown1 != null)
+            return markdown1;
 
         StringBuilder result = new StringBuilder();
         String[] lines = markdown.split("\\n");
-        boolean inTable = false;
-        boolean isFirstRow = true;
+        ConversionContext ctx = new ConversionContext();
 
         for (String s : lines) {
-            String line = s.trim();
-
-            // Check if this is a table row (contains |)
-            if (line.startsWith("|") && line.endsWith("|")) {
-                // Skip separator rows (like |---|---|)
-                if (line.matches("^\\|[\\s:-]+\\|$")
-                        || line.matches("^\\|\\s*:?-+:?\\s*(\\|\\s*:?-+:?\\s*)*\\|$")) {
-                    isFirstRow = false;
-                    continue;
-                }
-
-                if (!inTable) {
-                    result.append("<div class='md-table'>\n");
-                    inTable = true;
-                    isFirstRow = true;
-                }
-
-                // Parse table cells
-                String[] cells = line.split("\\|");
-                String rowClass = isFirstRow ? "md-table-header" : "md-table-row";
-                result.append("<div class='").append(rowClass).append("'>\n");
-
-                appendTable(cells, result);
-
-                result.append(DIV_NEWLINE);
-                isFirstRow = false;
-
-            } else {
-                // Not a table row
-                if (inTable) {
-                    result.append(DIV_NEWLINE); // Close the table
-                    inTable = false;
-                    isFirstRow = true;
-                }
-                result.append(line).append("\n");
-            }
+            processLine(s.trim(), result, ctx);
         }
 
-        // Close table if still open
-        if (inTable) {
+        if (ctx.inTable) {
             result.append(DIV_NEWLINE);
         }
 
@@ -124,6 +89,7 @@ public class CreateHtmlReport {
 
     /**
      * return Markdown if contains "|"
+     * 
      * @param markdown mention Markdown
      * @return MarkDown
      */
@@ -136,7 +102,8 @@ public class CreateHtmlReport {
 
     /**
      * append table
-     * @param cells mention cells
+     * 
+     * @param cells  mention cells
      * @param result mention result
      */
     public void appendTable(String[] cells, StringBuilder result) {
@@ -147,5 +114,58 @@ public class CreateHtmlReport {
                         .append(DIV_NEWLINE);
             }
         }
+    }
+
+    private void processLine(String line, StringBuilder result, ConversionContext ctx) {
+        if (isTableRow(line)) {
+            processTableRow(line, result, ctx);
+        } else {
+            processNonTableRow(line, result, ctx);
+        }
+    }
+
+    private boolean isTableRow(String line) {
+        return line.startsWith("|") && line.endsWith("|");
+    }
+
+    private void processTableRow(String line, StringBuilder result, ConversionContext ctx) {
+        if (isSeparatorRow(line)) {
+            ctx.isFirstRow = false;
+            return;
+        }
+
+        if (!ctx.inTable) {
+            result.append("<div class='md-table'>\n");
+            ctx.inTable = true;
+            ctx.isFirstRow = true;
+        }
+
+        String[] cells = line.split("\\|");
+        String rowClass = ctx.isFirstRow ? "md-table-header" : "md-table-row";
+        result.append("<div class='").append(rowClass).append("'>\n");
+
+        appendTable(cells, result);
+
+        result.append(DIV_NEWLINE);
+        ctx.isFirstRow = false;
+    }
+
+    private boolean isSeparatorRow(String line) {
+        return line.matches("^\\|[\\s:-]+\\|$")
+                || line.matches("^\\|\\s*:?-+:?\\s*(\\|\\s*:?-+:?\\s*)*\\|$");
+    }
+
+    private void processNonTableRow(String line, StringBuilder result, ConversionContext ctx) {
+        if (ctx.inTable) {
+            result.append(DIV_NEWLINE); // Close the table
+            ctx.inTable = false;
+            ctx.isFirstRow = true;
+        }
+        result.append(line).append("\n");
+    }
+
+    private static class ConversionContext {
+        boolean inTable = false;
+        boolean isFirstRow = true;
     }
 }
