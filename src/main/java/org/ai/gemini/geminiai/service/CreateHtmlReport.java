@@ -1,6 +1,9 @@
 package org.ai.gemini.geminiai.service;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.stereotype.Service;
+
+import static org.ai.gemini.geminiai.constants.HtmlConstants.DIV_NEWLINE;
 
 @Service
 public class CreateHtmlReport {
@@ -64,9 +67,8 @@ public class CreateHtmlReport {
      * This creates cleaner, more flexible layouts that don't look ugly.
      */
     public String convertMarkdownTablesToDivs(String markdown) {
-        if (!markdown.contains("|")) {
-            return markdown;
-        }
+        String markdown1 = getMarkDown(markdown);
+        if (markdown1 != null) return markdown1;
 
         StringBuilder result = new StringBuilder();
         String[] lines = markdown.split("\\n");
@@ -96,21 +98,15 @@ public class CreateHtmlReport {
                 String rowClass = isFirstRow ? "md-table-header" : "md-table-row";
                 result.append("<div class='").append(rowClass).append("'>\n");
 
-                for (String cell : cells) {
-                    cell = cell.trim();
-                    if (!cell.isEmpty()) {
-                        result.append("<div class='md-table-cell'>").append(cell)
-                                .append("</div>\n");
-                    }
-                }
+                appendTable(cells, result);
 
-                result.append("</div>\n");
+                result.append(DIV_NEWLINE);
                 isFirstRow = false;
 
             } else {
                 // Not a table row
                 if (inTable) {
-                    result.append("</div>\n"); // Close the table
+                    result.append(DIV_NEWLINE); // Close the table
                     inTable = false;
                     isFirstRow = true;
                 }
@@ -120,9 +116,36 @@ public class CreateHtmlReport {
 
         // Close table if still open
         if (inTable) {
-            result.append("</div>\n");
+            result.append(DIV_NEWLINE);
         }
 
         return result.toString();
+    }
+
+    /**
+     * return Markdown if contains "|"
+     * @param markdown mention Markdown
+     * @return MarkDown
+     */
+    public static @Nullable String getMarkDown(String markdown) {
+        if (!markdown.contains("|")) {
+            return markdown;
+        }
+        return null;
+    }
+
+    /**
+     * append table
+     * @param cells mention cells
+     * @param result mention result
+     */
+    public void appendTable(String[] cells, StringBuilder result) {
+        for (String cell : cells) {
+            cell = cell.trim();
+            if (!cell.isEmpty()) {
+                result.append("<div class='md-table-cell'>").append(cell)
+                        .append(DIV_NEWLINE);
+            }
+        }
     }
 }
