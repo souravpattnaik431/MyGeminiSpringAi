@@ -42,17 +42,17 @@ public class CreateHtmlReport {
         html = html.replaceAll("(?m)^# (.*)$", "<h1>$1</h1>");
 
         // Bold
-        html = html.replaceAll("\\*\\*(.*?)\\*\\*", "<strong>$1</strong>");
+        html = html.replaceAll("\\*\\*((?:[^*]|\\*(?!\\*))*+)\\*\\*", "<strong>$1</strong>");
 
         // Code Blocks
-        html = html.replaceAll("(?s)```(.*?)\\n(.*?)```", "<pre><code>$2</code></pre>");
+        html = html.replaceAll("(?s)```([^\\n]*+)\\n((?:(?!```).)*+)```", "<pre><code>$2</code></pre>");
 
         // Inline Code
         html = html.replaceAll("`(.*?)`", "<code>$1</code>");
 
         // Lists
         // Handle * or - lists with optional indentation
-        html = html.replaceAll("(?m)^\\s*[*•-]\\s+(.*)$", "<li>$1</li>");
+        html = html.replaceAll("(?m)^\\s*+[*•-]\\s++(.*+)$", "<li>$1</li>");
 
         // Wrap lists (better heuristic)
         html = html.replaceAll("((<li>.*</li>\\s*)+)", "<ul>$1</ul>");
