@@ -1,12 +1,12 @@
 package org.ai.gemini.geminiai.controller;
 import module java.base;
+import org.springframework.web.bind.annotation.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.ai.gemini.geminiai.dto.ToolChangeResult;
 import org.ai.gemini.geminiai.dto.ToolChangesRequest;
 import org.ai.gemini.geminiai.dto.ToolChangesResponse;
 import org.ai.gemini.geminiai.service.AiService;
-import org.springframework.web.bind.annotation.*;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
