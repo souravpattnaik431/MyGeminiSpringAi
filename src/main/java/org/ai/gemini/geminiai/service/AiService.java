@@ -47,7 +47,7 @@ public class AiService {
 
     @Value("${app.ai.timeout.batch:120}")
     private long batchTimeout;
-    @Value("tool.last.changes.days:30")
+    @Value("${tool.last.changes.days:30}")
     public String days;
 
     /**
