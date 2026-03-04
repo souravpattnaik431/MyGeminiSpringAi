@@ -15,6 +15,8 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 
+import static org.ai.gemini.geminiai.constants.AiConstants.ERROR;
+
 /**
  * Service for managing AI-powered tool change queries.
  * <p>
@@ -45,7 +47,7 @@ public class AiService {
 
     @Value("${app.ai.timeout.batch:120}")
     private long batchTimeout;
-    @Value("tool.last.changes.days")
+    @Value("tool.last.changes.days:30")
     public String days;
 
     /**
@@ -82,7 +84,7 @@ public class AiService {
                         null,
                         null,
                         processingTime,
-                        "ERROR");
+                        ERROR);
             }
 
             ChatResponseMetadata metadata = chatResponse.getMetadata();
@@ -116,7 +118,7 @@ public class AiService {
                     null,
                     null,
                     processingTime,
-                    "ERROR");
+                    ERROR);
         }
     }
 
@@ -160,6 +162,7 @@ public class AiService {
                         TimeUnit.SECONDS);
             } catch (Exception e) {
                 log.warn("Batch partial failure: {}", e.getMessage());
+                Thread.currentThread().interrupt();
             }
 
             allResults.addAll(futures.stream().map(f -> f.getNow(
@@ -170,7 +173,7 @@ public class AiService {
                                     null,
                                     null,
                                     null,
-                                    "ERROR")))
+                                    ERROR)))
                     .toList());
         }
 
