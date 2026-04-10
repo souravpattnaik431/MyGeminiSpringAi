@@ -4,6 +4,16 @@
         "playwright",
         "saucelabs",
         "selenium-java",
-        "spring-boot"
+        "spring-boot",
+        "appium-java",
+        "automation-anywhere-360",
+        "java-openjdk",
+        "spring-ai-java",
+        "gitlab",
+        "sonarqube",
+        "argocd",
+        "elasticsearch",
+        "nexus",
+        "jfrog-artifactory"
     ]
 }
