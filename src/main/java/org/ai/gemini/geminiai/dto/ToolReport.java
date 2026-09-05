@@ -1,7 +1,6 @@
 package org.ai.gemini.geminiai.dto;
-
+import module java.base;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
-import java.util.List;
 
 /**
  * Record representing the overall structured report for a tool.

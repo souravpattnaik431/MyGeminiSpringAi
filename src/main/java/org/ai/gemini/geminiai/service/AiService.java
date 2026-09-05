@@ -18,6 +18,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 
+
 import static org.ai.gemini.geminiai.constants.AiConstants.ERROR;
 
 /**
@@ -190,7 +191,7 @@ public class AiService {
                 totalTime,
                 totalInputTokens,
                 totalOutputTokens,
-                LocalDateTime.now().toString());
+                LocalDateTime.now(ZoneId.systemDefault()).toString());
     }
 
 }

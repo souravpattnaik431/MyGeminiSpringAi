@@ -1,6 +1,5 @@
 package org.ai.gemini.geminiai.controller;
 
-import module java.base;
 import org.springframework.web.bind.annotation.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

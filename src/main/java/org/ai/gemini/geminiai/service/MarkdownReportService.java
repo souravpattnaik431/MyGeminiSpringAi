@@ -1,17 +1,13 @@
 package org.ai.gemini.geminiai.service;
-
+import module java.base;
 import lombok.extern.slf4j.Slf4j;
 import org.ai.gemini.geminiai.dto.ToolChangeResult;
 import org.ai.gemini.geminiai.dto.ToolChangesResponse;
+import org.ai.gemini.geminiai.dto.ToolReport;
 import org.ai.gemini.geminiai.dto.ToolUpdateItem;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+
 
 /**
  * Service to generate and save clean, formatted Markdown reports from structured AI responses.
@@ -25,6 +21,7 @@ import java.time.format.DateTimeFormatter;
 public class MarkdownReportService {
 
     private static final String DEFAULT_OUTPUT_FILE = "latest_tool_updates.md";
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     /**
      * Generates a clean Markdown report from a ToolChangesResponse and saves it to disk.
@@ -34,10 +31,22 @@ public class MarkdownReportService {
      */
     public String generateAndSaveReport(ToolChangesResponse response) {
         StringBuilder md = new StringBuilder();
+        appendHeader(md, response);
 
-        String formattedTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        if (response.results() == null || response.results().isEmpty()) {
+            md.append("_No tool results available._\n");
+        } else {
+            response.results().forEach(result -> appendToolResult(md, result));
+        }
 
-        // Header
+        String markdownContent = md.toString();
+        saveToFile(markdownContent);
+        return markdownContent;
+    }
+
+    private void appendHeader(StringBuilder md, ToolChangesResponse response) {
+        String formattedTime = LocalDateTime.now(ZoneId.systemDefault()).format(DATE_FORMATTER);
+
         md.append("# 🚀 Technical Tools Update Digest\n\n");
         md.append("> **Generated**: `").append(formattedTime).append("`  \n");
         md.append("> **Total Tools Processed**: `").append(response.totalTools()).append("` | ");
@@ -48,79 +57,96 @@ public class MarkdownReportService {
               .append(response.totalInputTokens()).append(" / ").append(response.totalOutputTokens()).append("`");
         }
         md.append("\n\n---\n\n");
+    }
 
-        if (response.results() == null || response.results().isEmpty()) {
-            md.append("_No tool results available._\n");
+    private void appendToolResult(StringBuilder md, ToolChangeResult result) {
+        md.append("## 📦 ").append(result.toolName().toUpperCase()).append("\n\n");
+        appendToolMetadata(md, result);
+
+        if (result.report() != null) {
+            appendToolReport(md, result.report());
         } else {
-            for (ToolChangeResult result : response.results()) {
-                md.append("## 📦 ").append(result.toolName().toUpperCase()).append("\n\n");
-
-                md.append("**Status**: `").append(result.status()).append("`");
-                if (result.processingTimeMs() != null) {
-                    md.append(" | **Time**: `").append(result.processingTimeMs()).append(" ms`");
-                }
-                if (result.inputTokens() != null && result.outputTokens() != null) {
-                    md.append(" | **Tokens**: `").append(result.inputTokens()).append(" in / ").append(result.outputTokens()).append(" out`");
-                }
-                md.append("\n\n");
-
-                if (result.report() != null) {
-                    if (result.report().overview() != null && !result.report().overview().isBlank()) {
-                        md.append("> ").append(result.report().overview()).append("\n\n");
-                    }
-
-                    if (result.report().updates() != null && !result.report().updates().isEmpty()) {
-                        for (ToolUpdateItem item : result.report().updates()) {
-                            String impactEmoji = getImpactEmoji(item.impactLevel());
-                            String title = (item.title() != null && !item.title().isBlank()) ? item.title() : "Update";
-
-                            md.append("### ").append(impactEmoji).append(" ").append(title).append("\n\n");
-
-                            final boolean b = item.source() != null && !item.source().isBlank();
-                            if (item.date() != null && !item.date().isBlank()) {
-                                md.append("- **Date**: ").append(item.date());
-                                if (b) {
-                                    md.append(" | **Source**: ").append(item.source());
-                                }
-                                md.append("\n");
-                            } else if (b) {
-                                md.append("- **Source**: ").append(item.source()).append("\n");
-                            }
-
-                            if (item.summary() != null && !item.summary().isBlank()) {
-                                md.append("- **Summary**: ").append(item.summary()).append("\n");
-                            }
-
-                            if (item.actionItems() != null && !item.actionItems().isEmpty()) {
-                                md.append("- **Action Items**:\n");
-                                for (String action : item.actionItems()) {
-                                    md.append("  - [ ] ").append(action).append("\n");
-                                }
-                            }
-                            md.append("\n");
-                        }
-                    } else {
-                        md.append("_No specific updates reported for this timeframe._\n\n");
-                    }
-                } else {
-                    md.append("⚠️ **Error**: ").append(result.errorMessage() != null ? result.errorMessage() : "Failed to retrieve updates.").append("\n\n");
-                }
-
-                md.append("---\n\n");
-            }
+            appendToolError(md, result);
         }
 
-        String markdownContent = md.toString();
+        md.append("---\n\n");
+    }
 
+    private void appendToolMetadata(StringBuilder md, ToolChangeResult result) {
+        md.append("**Status**: `").append(result.status()).append("`");
+        if (result.processingTimeMs() != null) {
+            md.append(" | **Time**: `").append(result.processingTimeMs()).append(" ms`");
+        }
+        if (result.inputTokens() != null && result.outputTokens() != null) {
+            md.append(" | **Tokens**: `").append(result.inputTokens()).append(" in / ").append(result.outputTokens()).append(" out`");
+        }
+        md.append("\n\n");
+    }
+
+    private void appendToolReport(StringBuilder md, ToolReport report) {
+        if (report.overview() != null && !report.overview().isBlank()) {
+            md.append("> ").append(report.overview()).append("\n\n");
+        }
+
+        if (report.updates() == null || report.updates().isEmpty()) {
+            md.append("_No specific updates reported for this timeframe._\n\n");
+            return;
+        }
+
+        report.updates().forEach(item -> appendUpdateItem(md, item));
+    }
+
+    private void appendUpdateItem(StringBuilder md, ToolUpdateItem item) {
+        String impactEmoji = getImpactEmoji(item.impactLevel());
+        String title = (item.title() != null && !item.title().isBlank()) ? item.title() : "Update";
+
+        md.append("### ").append(impactEmoji).append(" ").append(title).append("\n\n");
+        appendItemDateAndSource(md, item);
+
+        if (item.summary() != null && !item.summary().isBlank()) {
+            md.append("- **Summary**: ").append(item.summary()).append("\n");
+        }
+
+        appendItemActionItems(md, item.actionItems());
+        md.append("\n");
+    }
+
+    private void appendItemDateAndSource(StringBuilder md, ToolUpdateItem item) {
+        boolean hasDate = item.date() != null && !item.date().isBlank();
+        boolean hasSource = item.source() != null && !item.source().isBlank();
+
+        if (hasDate && hasSource) {
+            md.append("- **Date**: ").append(item.date()).append(" | **Source**: ").append(item.source()).append("\n");
+        } else if (hasDate) {
+            md.append("- **Date**: ").append(item.date()).append("\n");
+        } else if (hasSource) {
+            md.append("- **Source**: ").append(item.source()).append("\n");
+        }
+    }
+
+    private void appendItemActionItems(StringBuilder md, List<String> actionItems) {
+        if (actionItems == null || actionItems.isEmpty()) {
+            return;
+        }
+        md.append("- **Action Items**:\n");
+        for (String action : actionItems) {
+            md.append("  - [ ] ").append(action).append("\n");
+        }
+    }
+
+    private void appendToolError(StringBuilder md, ToolChangeResult result) {
+        String error = result.errorMessage() != null ? result.errorMessage() : "Failed to retrieve updates.";
+        md.append("⚠️ **Error**: ").append(error).append("\n\n");
+    }
+
+    private void saveToFile(String content) {
         try {
             Path path = Paths.get(DEFAULT_OUTPUT_FILE);
-            Files.writeString(path, markdownContent);
+            Files.writeString(path, content);
             log.info("Successfully generated and saved Markdown report to: {}", path.toAbsolutePath());
         } catch (IOException e) {
             log.error("Failed to save Markdown report file: {}", e.getMessage(), e);
         }
-
-        return markdownContent;
     }
 
     private String getImpactEmoji(String impactLevel) {
