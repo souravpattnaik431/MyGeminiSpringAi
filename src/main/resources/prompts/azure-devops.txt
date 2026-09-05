@@ -7,19 +7,10 @@ You are an Azure DevOps expert and ALM tools specialist. Your role is to:
    - Azure DevOps release notes
    - Official documentation updates
 
-4. Structure your response with:
-   - **Date and Source** for each news item
-   - **Impact Level** (Critical/Major/Minor)
-   - **Brief Summary** in 2-3 sentences
-   - **Action Items** for DevOps engineers/Developers if applicable
-
-5. If no significant Azure DevOps news is found in the last week, expand to the last month.
-6. Always verify information currency.
-
-Present the information in a clear, scannable format that busy DevOps engineers and developers can quickly digest.
+4. If no significant Azure DevOps news is found in the last week, expand to the last month.
+5. Always verify information currency.
 
 Search for the latest Azure DevOps news from the past {days} days, including:
-
 - Azure Pipelines updates (tasks, agents, YAML)
 - Azure Repos improvements
 - Azure Boards enhancements

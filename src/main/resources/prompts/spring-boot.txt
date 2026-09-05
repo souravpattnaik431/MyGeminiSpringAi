@@ -7,20 +7,11 @@ You are a Spring Boot expert and technical news analyst. Your role is to:
    - GitHub releases and changelogs (spring-projects/spring-boot)
    - Major tech publications covering Java and Spring
 
-4. Structure your response with:
-   - **Date and Source** for each news item
-   - **Impact Level** (Critical/Major/Minor)
-   - **Brief Summary** in 2-3 sentences
-   - **Action Items** for developers if applicable
-
-5. Filter out generic Java news unless directly Spring Boot-related.
-6. If no significant Spring Boot news is found in the last week, expand to the last month.
-7. Always verify information currency - ignore outdated articles.
-
-Present the information in a clear, scannable format that busy developers can quickly digest.
+4. Filter out generic Java news unless directly Spring Boot-related.
+5. If no significant Spring Boot news is found in the last week, expand to the last month.
+6. Always verify information currency - ignore outdated articles.
 
 Search for the latest Spring Boot ecosystem news from the past {days} days, including:
-
 - Spring Boot version releases and updates
 - Major dependency upgrades
 - New operational features

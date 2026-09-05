@@ -5,8 +5,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.ai.gemini.geminiai.dto.ToolChangeResult;
 import org.ai.gemini.geminiai.dto.ToolChangesResponse;
+import org.ai.gemini.geminiai.dto.ToolReport;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.client.ResponseEntity;
 import org.springframework.ai.chat.metadata.ChatResponseMetadata;
+import org.springframework.ai.chat.metadata.Usage;
 import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.chat.prompt.PromptTemplate;
@@ -18,14 +21,14 @@ import org.springframework.stereotype.Service;
 import static org.ai.gemini.geminiai.constants.AiConstants.ERROR;
 
 /**
- * Service for managing AI-powered tool change queries.
+ * Service for managing AI-powered tool change queries with Spring AI structured output.
  * <p>
  * This service handles both individual and batch tool queries,
- * managing parallel execution, token tracking, and error handling.
+ * utilizing Spring AI's native structured output to produce typed DTOs directly from Gemini.
  * </p>
  *
  * @author Gemini AI Service
- * @version 1.0
+ * @version 2.0
  * @since 2026-01-01
  */
 @Service
@@ -33,7 +36,6 @@ import static org.ai.gemini.geminiai.constants.AiConstants.ERROR;
 @Slf4j
 public class AiService {
     private final ChatClient chatClient;
-    private final CreateHtmlReport createHtmlReport;
     private final ExecutorService executorService = new ThreadPoolExecutor(
             10, 20, 120L, TimeUnit.SECONDS,
             new ArrayBlockingQueue<>(100), new ThreadPoolExecutor.CallerRunsPolicy());
@@ -51,16 +53,10 @@ public class AiService {
     public String days;
 
     /**
-     * Retrieves tool changes with complete metadata for a single tool.
-     * <p>
-     * This method queries the AI service for the latest updates about a specific
-     * tool,
-     * tracking token usage and processing time.
-     * </p>
+     * Retrieves structured tool changes with complete metadata for a single tool.
      *
      * @param toolName Name of the tool to query
-     * @return ToolChangeResult containing content, tokens, processing time, and
-     * status
+     * @return ToolChangeResult containing structured ToolReport, token usage, processing time, and status
      */
     public ToolChangeResult getToolChangesWithMetadata(String toolName) {
         long startTime = System.currentTimeMillis();
@@ -70,65 +66,55 @@ public class AiService {
             Resource toolPrompt = resourceLoader.getResource("classpath:prompts/" + toolName + ".txt");
             PromptTemplate promptTemplate = new PromptTemplate(toolPrompt);
             Prompt prompt = promptTemplate.create(Map.of("days", days));
-            log.info("Final Input Prompt is {}", prompt.getContents());
+            log.info("Final Input Prompt is: {}", prompt.getContents());
 
-            ChatResponse chatResponse = chatClient.prompt(prompt).call().chatResponse();
+            ResponseEntity<ChatResponse, ToolReport> responseEntity = chatClient.prompt(prompt)
+                    .call()
+                    .responseEntity(ToolReport.class, spec -> spec.useProviderStructuredOutput().validateSchema());
+
             long processingTime = System.currentTimeMillis() - startTime;
+            ToolReport report = responseEntity.entity();
+            ChatResponse chatResponse = responseEntity.response();
 
-            if (chatResponse == null) {
-                log.error("Empty chat response for tool: {}", toolName);
-                return new ToolChangeResult(
-                        toolName,
-                        "Empty Chat Response from AI",
-                        "",
-                        null,
-                        null,
-                        processingTime,
-                        ERROR);
+            Integer inputTokens = null;
+            Integer outputTokens = null;
+            if (chatResponse != null) {
+                ChatResponseMetadata metadata = chatResponse.getMetadata();
+                Usage usage = metadata.getUsage();
+                inputTokens = usage.getPromptTokens();
+                outputTokens = usage.getCompletionTokens();
             }
-
-            ChatResponseMetadata metadata = chatResponse.getMetadata();
-            Integer inputTokens = metadata.getUsage().getPromptTokens();
-            Integer outputTokens = metadata.getUsage().getCompletionTokens();
-            String outputFromAI = chatResponse.getResult().getOutput().getText();
-            String htmlContent = createHtmlReport.convertMarkdownToHtml(outputFromAI);
 
             log.info("Total input tokens for {}: {}", toolName, inputTokens);
             log.info("Total output tokens for {}: {}", toolName, outputTokens);
-            log.info("Content for {}: \n{}", toolName, outputFromAI);
+            log.info("Structured Report for {}: {}", toolName, report);
             log.info("Processing time for {}: {}ms", toolName, processingTime);
 
             return new ToolChangeResult(
                     toolName,
-                    outputFromAI,
-                    htmlContent,
+                    report,
                     inputTokens,
                     outputTokens,
                     processingTime,
-                    "SUCCESS");
+                    "SUCCESS",
+                    null);
 
         } catch (Exception e) {
             long processingTime = System.currentTimeMillis() - startTime;
-            log.error("Exception in getting chat response from AI for tool {}: {}", toolName,
-                    e.getMessage());
+            log.error("Exception in getting structured response from AI for tool {}: {}", toolName, e.getMessage(), e);
             return new ToolChangeResult(
                     toolName,
-                    "Error: " + e.getMessage(),
-                    "",
+                    null,
                     null,
                     null,
                     processingTime,
-                    ERROR);
+                    ERROR,
+                    e.getMessage());
         }
     }
 
-
     /**
      * Retrieves tool changes for multiple tools in parallel.
-     * <p>
-     * This method processes multiple tool queries concurrently using a thread pool,
-     * aggregates the results, and calculates total token usage and processing time.
-     * </p>
      *
      * @param tools List of tool names to query
      * @return ToolChangesResponse with individual results and aggregated statistics
@@ -147,12 +133,12 @@ public class AiService {
                             .completeOnTimeout(
                                     new ToolChangeResult(
                                             tool,
-                                            "Request timed out",
-                                            "",
+                                            null,
                                             null,
                                             null,
                                             individualTimeout * 1000,
-                                            "TIMEOUT"),
+                                            "TIMEOUT",
+                                            "Request timed out"),
                                     individualTimeout,
                                     TimeUnit.SECONDS))
                     .toList();
@@ -168,12 +154,12 @@ public class AiService {
             allResults.addAll(futures.stream().map(f -> f.getNow(
                             new ToolChangeResult(
                                     "UNKNOWN",
-                                    "Failed to retrieve result",
-                                    "",
                                     null,
                                     null,
                                     null,
-                                    ERROR)))
+                                    null,
+                                    ERROR,
+                                    "Failed to retrieve result")))
                     .toList());
         }
 

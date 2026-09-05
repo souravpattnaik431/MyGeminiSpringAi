@@ -32,4 +32,3 @@ build/
 ### VS Code ###
 .vscode/
 /logs
-latest_tool_updates.html
