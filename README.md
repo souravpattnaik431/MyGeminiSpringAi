@@ -10,7 +10,7 @@ An automated, AI-powered developer intelligence service built with **Spring Boot
 * **Spring Boot**: `4.1.1`
 * **Spring AI**: `2.0.0+` (using `spring-ai-starter-model-google-genai` 2.0.1)
 * **Apache Maven**: `3.9.16+` *(any modern Maven 3.9+ version will work; built and verified on 3.9.16)*
-* **Google Gemini API Key**: with model access (`gemini-3.6-flash`)
+* **Google Gemini API Key**: with model access (`gemini-3.8-flash`)
 
 ---
 
