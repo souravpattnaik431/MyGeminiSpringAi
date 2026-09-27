@@ -125,7 +125,7 @@ export GEMINI_AI_KEY="your-gemini-api-key-here"
 
 ```properties
 spring.ai.google.genai.api-key=${GEMINI_AI_KEY}
-spring.ai.google.genai.chat.options.model=gemini-3.6-flash
+spring.ai.google.genai.chat.options.model=gemini-3.8-flash
 spring.ai.google.genai.chat.options.google-search-retrieval=true
 
 tool.last.changes.days=30
@@ -231,13 +231,13 @@ curl -X GET http://localhost:8080/gemini/playwright
 
 Customized prompts focusing on authoritative documentation, GitHub changelogs, and official blogs are preconfigured in `src/main/resources/prompts/`:
 
-| Category                         | Supported Tools                                           |
-|:---------------------------------|:----------------------------------------------------------|
-| **Frameworks & Languages**       | `java-openjdk`, `spring-boot`, `spring-ai-java`           |
-| **Test Automation**              | `playwright`, `selenium-java`, `appium-java`, `saucelabs` |
-| **DevOps & CI/CD**               | `argocd`, `azure-devops`, `gitlab`                        |
-| **Artifact & Code Quality**      | `sonarqube`, `nexus`, `jfrog-artifactory`                 |
-| **Data & Enterprise Automation** | `elasticsearch`, `automation-anywhere-360`                |
+| Category | Supported Tools |
+| :--- | :--- |
+| **Frameworks & Languages** | `java-openjdk`, `spring-boot`, `spring-ai-java` |
+| **Test Automation** | `playwright`, `selenium-java`, `appium-java`, `saucelabs` |
+| **DevOps & CI/CD** | `argocd`, `azure-devops`, `gitlab` |
+| **Artifact & Code Quality** | `sonarqube`, `nexus`, `jfrog-artifactory` |
+| **Data & Enterprise Automation** | `elasticsearch`, `automation-anywhere-360` |
 
 ---
 
