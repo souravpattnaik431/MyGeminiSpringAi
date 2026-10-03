@@ -1,404 +1,428 @@
 # 🚀 Technical Tools Update Digest
 
-> **Generated**: `2026-09-05 13:02:16`  
-> **Total Tools Processed**: `9` | **Total Processing Time**: `46354 ms` | **Total Tokens (In/Out)**: `5089 / 9932`
+> **Generated**: `2026-10-03 10:52:23`  
+> **Total Tools Processed**: `9` | **Total Processing Time**: `25847 ms` | **Total Tokens (In/Out)**: `9733 / 10751`
 
 ---
 
 ## 📦 AZURE-DEVOPS
 
-**Status**: `SUCCESS` | **Time**: `17693 ms` | **Tokens**: `290 in / 941 out`
+**Status**: `SUCCESS` | **Time**: `20519 ms` | **Tokens**: `677 in / 881 out`
 
-> Recent Azure DevOps developments from August and September 2026 center on deeper AI integration, modernized security standards, and seamless repository migration paths to GitHub. Key features include the public preview of Enterprise Live Migrations (ELM), public preview of Copilot Code Reviews for Azure Repos, General Availability of the Azure DevOps Remote MCP Server, transition of pipeline authentication to Microsoft Entra-issued access tokens, and the release candidate for Azure DevOps Server 2022.2.
+> The past 30 days in Azure DevOps have introduced high-impact CI/CD compute flexibility, breaking pipeline security changes, and expanded GitHub Copilot intelligence. Azure Pipelines has reached General Availability for GitHub-hosted agents paired with a pay-as-you-go pricing model, alongside agent-level hardening that discontinues default Docker socket mounting. Azure Repos continues rapid AI maturation with configurable effort levels for Copilot Code Reviews, while Azure DevOps Server administrators received critical security patches advancing the deprecation of legacy TFVC policies.
 
-### 🟠 [MAJOR] Enterprise Live Migrations (ELM) Public Preview for Azure Repos
+### 🟠 [MAJOR] General Availability of GitHub-Hosted Agents and Pay-As-You-Go in Azure Pipelines
 
-- **Date**: 2026-09-02 | **Source**: Azure DevOps Blog
-- **Summary**: Microsoft introduced the public preview of Enterprise Live Migrations (ELM), enabling enterprise teams to migrate Azure Repos to GitHub Enterprise Cloud with data residency while minimizing development freezes. ELM tools are also integrated into the Azure DevOps Remote MCP Server for agent-assisted migrations.
+- **Date**: September 30, 2026 | **Source**: Azure DevOps Blog
+- **Summary**: Microsoft announced the general availability of GitHub-hosted agents and pay-as-you-go pricing within Azure Pipelines. This enables teams to access specialized machine architectures, including native Apple silicon and larger Linux/Windows compute sizes, paying strictly for execution time rather than maintaining fixed parallel-job subscriptions.
 - **Action Items**:
-  - [ ] Evaluate enterprise repositories eligible for migration to GitHub Enterprise Cloud via ELM.
-  - [ ] Configure Remote MCP Server ELM tools to automate migration validation and dry runs.
+  - [ ] Evaluate CI/CD build profiles to determine if pay-as-you-go GitHub-hosted runners offer lower total cost of ownership compared to pre-provisioned parallel jobs.
+  - [ ] Update YAML pipelines targeting macOS workloads to take advantage of native Apple silicon runners.
 
-### 🟠 [MAJOR] Copilot Code Reviews for Azure Repos Enters Public Preview
+### 🔴 [CRITICAL] Breaking Security Change: Docker Socket No Longer Mapped by Default for Linux Container Jobs
 
-- **Date**: 2026-08-26 | **Source**: Azure DevOps Blog
-- **Summary**: GitHub Copilot Code Review for Azure Repos entered public preview for all Azure DevOps organizations. Updates include customizable repository review instructions, improved pull request annotation handling, and project-level cost tracking tags in Azure Cost Management.
+- **Date**: September 4, 2026 | **Source**: Azure DevOps Release Notes
+- **Summary**: To enforce least privilege across CI/CD execution environments, Azure Pipelines agent version 5.279.0 and later sets 'mapDockerSocket' to false by default for Linux container jobs. The host Docker socket is no longer automatically mounted into job containers, causing builds relying on implicit Docker-in-container access to fail unless explicitly configured.
 - **Action Items**:
-  - [ ] Enable Copilot Code Reviews in Azure Repos settings for development teams.
-  - [ ] Configure project-level tag filtering in Azure Cost Management to track Copilot usage costs per project.
+  - [ ] Review all containerized pipeline jobs executing Docker commands (Docker-in-container workflows).
+  - [ ] Explicitly specify 'mapDockerSocket: true' on container resources in YAML definitions where host Docker daemon access is required to prevent pipeline breakage.
 
-### 🟠 [MAJOR] General Availability of Azure DevOps Remote MCP Server
+### 🟠 [MAJOR] Granular Effort Levels and Cost Governance for Azure Repos Copilot Code Reviews
 
-- **Date**: 2026-08-20 | **Source**: Azure DevOps Release Notes
-- **Summary**: The Azure DevOps Remote Model Context Protocol (MCP) Server reached General Availability. This release enables AI agents and the GitHub Copilot App to interact with Azure DevOps, allowing developers to review PRs and manage work items directly in chat interfaces.
+- **Date**: September 10, 2026 | **Source**: Azure DevOps Blog
+- **Summary**: Microsoft introduced configurable effort levels ('Lite' and 'Balanced') for Copilot Code Review in Azure Repos at both project and repository scopes. This capability gives engineering leads direct control over AI analysis depth, review response times, and associated Copilot credit consumption.
 - **Action Items**:
-  - [ ] Deploy and configure the Azure DevOps Remote MCP Server for development teams.
-  - [ ] Install the Azure DevOps plugin in the GitHub Copilot App to enable native work item and pull request management.
+  - [ ] Project administrators should navigate to project and repository settings to configure default review depth (Lite vs. Balanced) based on branch significance.
+  - [ ] Review Azure Cost Management reports using the newly integrated project tags to monitor and budget Copilot Code Review AI usage.
 
-### 🔴 [CRITICAL] Pipeline Access Token Security Update and ARM64 VSTest Support
+### 🟠 [MAJOR] Deprecation Readiness Testing for Legacy Node.js Pipeline Tasks
 
-- **Date**: 2026-08-20 | **Source**: Azure DevOps Released Features
-- **Summary**: Azure Pipelines announced that build execution access tokens are transitioning to Microsoft Entra-issued access tokens. In addition, native ARM64 support was added to the VSTest v3 task, and Azure Monitor Logs audit streaming now mandates Entra authentication.
+- **Date**: September 4, 2026 | **Source**: Azure DevOps Release Notes
+- **Summary**: Microsoft introduced an organizational guardrail enabling administrators to run pipeline tasks using modern Node.js runtimes ahead of the complete removal of deprecated Node.js 6, 10, and 16 runners from the pipeline agent. Pipeline execution logs now explicitly warn engineers about affected legacy tasks during execution runs.
 - **Action Items**:
-  - [ ] Audit existing YAML pipelines for custom token usage in preparation for Microsoft Entra token enforcement.
-  - [ ] Upgrade pipeline test steps to VSTest v3 task to leverage native ARM64 agent support.
+  - [ ] Navigate to Organization settings > Pipelines > Settings > Task restrictions.
+  - [ ] Enable 'Restrict out of support Node.js versions in pipeline tasks' to test custom and marketplace tasks against modern runners before the November 24, 2026 removal deadline.
 
-### 🟠 [MAJOR] Azure DevOps Server 2022.2 Release Candidate Available
+### 🔴 [CRITICAL] Azure DevOps Server Security Patches and TFVC Policy Retirement
 
-- **Date**: 2026-08-11 | **Source**: Azure DevOps Server Release Notes
-- **Summary**: Microsoft announced Azure DevOps Server 2022 Update 2 Release Candidate (RC) for on-premises deployments. Features include customizable limits for area/iteration paths, bypass approvals and checks permissions in pipelines, and enhanced YAML validation.
+- **Date**: September 10, 2026 | **Source**: Microsoft Learn / Azure DevOps Blog
+- **Summary**: Microsoft published the September security patches for supported on-premises Azure DevOps Server releases to remediate known vulnerabilities. The patch also advances the planned retirement of legacy TFVC check-in policies by restricting outdated storage models.
 - **Action Items**:
-  - [ ] Download and test Azure DevOps Server 2022.2 RC in a test environment prior to production upgrade.
-  - [ ] Verify pipeline YAML configurations against the updated validation engine.
+  - [ ] Immediately apply the September 2026 patch across self-hosted Azure DevOps Server instances.
+  - [ ] Migrate any remaining legacy TFVC check-in policies to the modern policy storage model before upcoming servicing releases permanently remove legacy support.
 
 ---
 
 ## 📦 PLAYWRIGHT
 
-**Status**: `SUCCESS` | **Time**: `26634 ms` | **Tokens**: `522 in / 1075 out`
+**Status**: `SUCCESS` | **Time**: `18963 ms` | **Tokens**: `594 in / 921 out`
 
-> Over the past 30 days, the Playwright ecosystem reached key milestones marked by the releases of Playwright v1.63.0 and v1.62.x. Central developments include native core bundling of the Model Context Protocol (MCP) server and CLI, a completely overhauled Component Testing architecture based on stories and galleries, granular execution cancellation via AbortSignal, an isolated retries strategy to combat test flakiness, native WebP visual snapshot support, and critical TypeScript monorepo specifier fixes delivered in patch v1.62.1.
+> The Playwright ecosystem saw major releases and tooling updates over the past month, highlighted by the general availability of Playwright v1.63.0 and significant enhancements across the Playwright AI tooling suite (@playwright/mcp and @playwright/cli). Key innovations focus on eliminating test concurrency bottlenecks with test locks, expanding locator intelligence with cross-frame traversal and native visibility filtering, integrating AbortSignal support into assertions and actions, and optimizing browser agent protocols for coding assistants.
 
-### 🟠 [MAJOR] Playwright v1.63.0 Release and Container Environment Updates
+### 🟠 [MAJOR] Playwright 1.63 Releases Named Test Locks to Tame Shared Resource Collisions
 
-- **Date**: September 2026 | **Source**: GitHub Release v1.63.0 (microsoft/playwright)
-- **Summary**: Playwright v1.63.0 introduces full release updates across the Playwright Test runner, CLI tools, and official Docker container images. It bundles updated browser engine binaries for Chromium, Firefox, and WebKit while improving protocol integration for AI agent workflows.
+- **Date**: September 2026 | **Source**: GitHub Release v1.63.0
+- **Summary**: Playwright 1.63 introduces named test locks, allowing tests that access shared external resources or sensitive test data to coordinate safely across workers, files, and projects. Tests configured with matching lock names run sequentially relative to each other, while remaining unrelated tests continue to execute in parallel.
 - **Action Items**:
-  - [ ] Upgrade @playwright/test to version 1.63.0 using npm install -D @playwright/test@latest.
-  - [ ] Update CI pipeline base Docker images to mcr.microsoft.com/playwright:v1.63.0-noble.
-  - [ ] Execute npx playwright install to update Chromium, Firefox, and WebKit browser binaries.
+  - [ ] Refactor sequentially configured test suites or tests relying on global worker isolation to utilize named test locks with { lock: 'resource-id' }.
+  - [ ] Review test groups sharing mutable state (e.g., specific user logins or external databases) to prevent race conditions without sacrificing full suite parallelism.
 
-### 🔴 [CRITICAL] Playwright v1.62.1 Patch Release Resolves Monorepo & Type Regressions
+### 🟠 [MAJOR] Smarter Element Locating: Cross-Frame Selectors and locator.visible()
 
-- **Date**: July 2026 | **Source**: Playwright Official Release Notes v1.62.1
-- **Summary**: Playwright v1.62.1 addresses high-impact regressions introduced in the 1.62.0 release. Key fixes resolve tsconfig extends specifier lookup failures, broken directory project references in monorepos, branded primitive type errors in page.evaluate(), and accessibility snapshot element drops.
+- **Date**: September 2026 | **Source**: Playwright v1.63 Release Notes
+- **Summary**: The v1.63 release introduces locator.visible(), providing a first-class, standard API to filter locators down to strictly visible DOM elements in place of the legacy :visible selector. In addition, page.frameLocator() and frame.frameLocator() can now be invoked without arguments to automatically search across any frame in the entire document hierarchy.
 - **Action Items**:
-  - [ ] Upgrade immediately to @playwright/test v1.62.1 or newer if currently running version 1.62.0.
-  - [ ] Verify pnpm monorepos and tsconfig project references build without path resolution failures.
-  - [ ] Re-run accessibility snapshot suites to verify nested element names render accurately.
+  - [ ] Replace deprecated or brittle :visible CSS pseudo-class queries with the new locator.visible() method.
+  - [ ] Simplify multi-frame selector chains by removing intermediate frame locators where unique inner elements exist across subtrees.
 
-### 🟠 [MAJOR] Core Integration of Model Context Protocol (MCP) Server and Playwright CLI
+### 🔵 [MINOR] Granular Step Subtitles and Native AbortSignal Cancellation
 
-- **Date**: August 2026 | **Source**: Official Playwright Blog & Docs
-- **Summary**: Playwright now natively ships the Model Context Protocol (MCP) server and Playwright CLI inside the core @playwright/test package. QA engineers and developers can run npx playwright mcp and npx playwright cli directly without managing external package versions.
+- **Date**: September 2026 | **Source**: GitHub Release v1.63.0
+- **Summary**: Playwright now natively supports AbortSignal cancellation across most core browser actions and web-first expect assertions using the signal option. Furthermore, test.step() now accepts structured subtitle and params parameters, exposing detailed contextual arguments and target locators directly to HTML reporters and CI listeners.
 - **Action Items**:
-  - [ ] Remove standalone @playwright/mcp package installations from project dependencies.
-  - [ ] Configure AI tools (Claude Code, Cursor, Copilot) to invoke npx playwright mcp directly.
-  - [ ] Use browser_start_recording and browser_stop_recording CLI commands to translate manual browser actions into automated Playwright code.
+  - [ ] Adopt AbortController signals to gracefully cancel background polling, navigations, or long-running web assertions in dynamic test suites.
+  - [ ] Update custom test reporting plugins to ingest testStep.subtitle and testStep.params for richer diagnostics.
 
-### 🟠 [MAJOR] Overhauled Component Testing Model via Stories and Galleries
+### 🔵 [MINOR] Browser Context Storage State: OPFS Persistence and Origin-Based HTTP Credentials
 
-- **Date**: July 2026 | **Source**: Playwright Release Notes v1.62.0
-- **Summary**: Component testing in Playwright has been restructured around a stories and galleries model. Stories wrap components with props and mock data, while a gallery renders them on demand using fixtures.mount() to return scoped locators with full re-rendering and teardown controls.
+- **Date**: September 2026 | **Source**: GitHub Release v1.63.0
+- **Summary**: Playwright v1.63 adds the opfs option to include the Origin Private File System inside storage state snapshots, allowing local browser file systems to persist across isolated contexts. The update also adds support for multiple origin-scoped credentials via httpCredentials arrays and introduces new dialogclosed lifecycle events.
 - **Action Items**:
-  - [ ] Refactor component test files to use the new stories and gallery architecture.
-  - [ ] Update mount calls in component tests to use the typed fixtures.mount('story-id') syntax.
-  - [ ] Utilize locator.update(props) and locator.unmount() methods for dynamic component testing.
+  - [ ] Add the opfs flag when saving storage states in applications utilizing Origin Private File System persistence.
+  - [ ] Update multi-domain authentication configs to leverage the array format in httpCredentials to target distinct origins cleanly.
 
-### 🟠 [MAJOR] Isolated Test Retries Strategy and WebP Screenshot Support
+### 🟠 [MAJOR] Playwright AI Agent Tools: MCP Emulation Controls and CLI Performance Fixes
 
-- **Date**: July 2026 | **Source**: Playwright Documentation & Browser Notes
-- **Summary**: Playwright added an isolated retry mode that prevents retried flaky tests from inheriting mutated state from previous attempts. Furthermore, page and locator screenshots now support native WebP image formatting for visual assertions, while OS support for Debian 11 was deprecated.
+- **Date**: September 2026 | **Source**: GitHub Releases: microsoft/playwright-mcp and microsoft/playwright-cli
+- **Summary**: Microsoft shipped updates to the Playwright AI agent stack, including @playwright/mcp 0.0.82 and @playwright/cli. Changes bring on-the-fly media feature emulation (color schemes, contrast, and motion reduction), absolute artifact path exports for headless agents, and npm check caching to reduce token overhead and round-trip execution latency.
 - **Action Items**:
-  - [ ] Configure isolated retry settings in playwright.config.ts to prevent shared fixture contamination across retries.
-  - [ ] Adopt .webp file extensions in expect().toHaveScreenshot() assertions to reduce image storage overhead.
-  - [ ] Upgrade CI environment host OS from Debian 11 to a supported Linux distribution.
-
-### 🔵 [MINOR] AbortSignal Execution Cancellation across Web-First Assertions
-
-- **Date**: July 2026 | **Source**: Playwright API Reference
-- **Summary**: Most Playwright actions, page navigations, waits, and web-first assertions now accept an AbortSignal option. This feature allows test engineers to cancel long-running operations dynamically and implement custom timeout control mechanisms.
-- **Action Items**:
-  - [ ] Pass AbortController.signal to locator actions and assertions requiring custom cancellation timing.
-  - [ ] Combine signal options with timeout: 0 when disabling default execution timeouts.
-  - [ ] Update framework assertion helpers to accept optional AbortSignal parameters.
+  - [ ] Upgrade @playwright/mcp to 0.0.82 to utilize browser_emulate_media and fix service worker bypass on authentication states.
+  - [ ] Update @playwright/cli in automated agent workflows to avoid repeated registry round-trip latencies.
 
 ---
 
 ## 📦 SAUCELABS
 
-**Status**: `SUCCESS` | **Time**: `16485 ms` | **Tokens**: `325 in / 721 out`
+**Status**: `SUCCESS` | **Time**: `18656 ms` | **Tokens**: `1852 in / 1171 out`
 
-> Sauce Labs has announced significant platform developments during July and August 2026, headlined by the launch of Android Premium Cloud for ARM-native virtual Android testing, expanding the AI-driven AURA platform with Bring-Your-Own-Model (BYOM) choice, and enforcing the deprecation of Sauce Connect 4 in favor of Sauce Connect 5.
+> Sauce Labs has accelerated its transformation from automated test execution to an AI-Unified Release Assurance ecosystem. Recent developments highlight the rollout of the industry's first ARM-native Android virtual testing cloud on Google Cloud Axion infrastructure, the introduction of the AURA platform for agentic test authoring and verification, CLI tooling upgrades via saucectl v0.216.0, complete transition requirements to Sauce Connect 5, and specialized iOS capabilities including Apple Pay automation and real-device accessibility inspection.
 
-### 🟠 [MAJOR] Android Premium Cloud Released for ARM-Native Virtual Android Testing
+### 🟠 [MAJOR] ARM-Native Android Virtual Testing Cloud Launched on Google Axion Processors
 
-- **Date**: August 2026 | **Source**: Sauce Labs Product Changelog
-- **Summary**: Sauce Labs launched Android Premium Cloud on its Virtual Device Cloud, providing ARM-native Android emulators (Android 14 to 17) running on native ARM infrastructure without x86 translation layers. This delivers high-definition, low-latency live manual testing sessions and significantly faster automated test execution loops for ARM64-native applications.
+- **Date**: September 29, 2026 | **Source**: Official Press Release & Sauce Labs Blog
+- **Summary**: Sauce Labs launched ARM-native virtual devices for Android within its Virtual Device Cloud, powered by Google Cloud's bare-metal C4A instances with Axion processors. The release eliminates translation layers between ARM code and x86 emulators, substantially improving startup latency and real-device parity. The solution is also now directly accessible via the Google Cloud Marketplace.
 - **Action Items**:
-  - [ ] Transition Android virtual test configurations to use Google ARM Emulator families across Android 14 through 17
-  - [ ] Validate ARM64-native mobile application builds directly in Sauce Labs Virtual Device Cloud
+  - [ ] Migrate virtual Android test configurations to target ARM-native instances to avoid x86 emulation overhead.
+  - [ ] Verify native ARM64 Android app libraries and dependencies against Google Cloud C4A bare-metal instances on Sauce Labs.
+  - [ ] Consolidate cloud procurement via Google Cloud Marketplace if managing enterprise billing through GCP.
 
-### 🟠 [MAJOR] Sauce Labs AURA Expands with Bring-Your-Own-Model Capabilities
+### 🟠 [MAJOR] saucectl v0.216.0 Adds Native AI Test Authoring Commands and Runner Support
 
-- **Date**: August 2026 | **Source**: Official Press Release
-- **Summary**: Sauce Labs expanded its AI-unified release assurance platform, AURA, to allow enterprise teams to connect their choice of LLMs (open-source, open-weight, or proprietary). This bring-your-own-model feature enables organizations to enforce internal AI security standards while leveraging AI agents for test generation, execution, and root-cause analysis.
+- **Date**: September 28, 2026 | **Source**: GitHub Release saucectl v0.216.0
+- **Summary**: The saucectl CLI released version 0.216.0, adding dedicated runner kinds and commands for AI Test Authoring workflows. The release also includes tracking headers for AI authoring requests and updates Cypress framework schemas for September 2026 releases.
 - **Action Items**:
-  - [ ] Evaluate enterprise governance policies to select preferred open-source, open-weight, or proprietary LLMs
-  - [ ] Integrate AURA AI-driven test authoring and failure analysis into release pipelines
+  - [ ] Update local and CI/CD CLI installations to saucectl v0.216.0 or later.
+  - [ ] Incorporate new AI authoring command flags into automated pipelines to test agentic test generation runs.
+  - [ ] Update project configuration schemas to support newly added framework runtimes including the latest Cypress releases.
 
-### 🔴 [CRITICAL] Sauce Connect 4 Reaches End of Life; Sauce Connect 5 Migration Required
+### 🔴 [CRITICAL] Sauce Labs Launches AURA: AI-Unified Release Assurance Platform
 
-- **Date**: July 2026 | **Source**: Sauce Labs Product Changelog
-- **Summary**: Sauce Connect 4 (SC4) officially reached End of Life on July 31, 2026, and is no longer supported for secure local-to-cloud proxy tunnels. Teams are required to upgrade to Sauce Connect 5 (SC5), which delivers up to 5x performance improvements, 50x less memory usage, and enhanced time-based access control.
+- **Date**: July 2026 | **Source**: Official Announcement & Business Wire
+- **Summary**: Sauce Labs introduced AURA, an AI-Unified Release Assurance platform engineered to close the verification bottleneck caused by AI-generated code. AURA provides closed-loop agentic test authoring, autonomous execution, and error analysis, and holds ISO 42001 certification.
 - **Action Items**:
-  - [ ] Migrate all proxy tunnels from Sauce Connect 4 to Sauce Connect 5 immediately to ensure uninterrupted cloud execution
-  - [ ] Update CI/CD pipeline dependencies to use SC5 binaries and take advantage of lower memory overhead
+  - [ ] Evaluate AURA agentic authoring capabilities inside developer IDEs to accelerate automated test generation.
+  - [ ] Integrate production crash and error data loops from Sauce Error Reporting into automated regression test generation.
+  - [ ] Review enterprise compliance requirements under Sauce Labs' ISO 42001 certification standard for AI systems.
 
-### 🟠 [MAJOR] iOS 26.5 Simulator Support and Appium 3 Virtual Device Support Released
+### 🔴 [CRITICAL] Sauce Connect 4 Traffic Deprecated in Favor of Sauce Connect 5.5.0+
 
-- **Date**: July 2026 | **Source**: Sauce Labs Product Changelog
-- **Summary**: Sauce Labs introduced support for iOS 26.5 simulators along with new virtual device profiles, including the iPhone 17e and M4 iPad Air models. Additionally, this release introduces support for Appium 3 (Appium Server 3.30.0) on iOS Simulators to align with the latest mobile automation drivers.
+- **Date**: July 31, 2026 | **Source**: Sauce Labs Documentation & Service Status
+- **Summary**: Sauce Labs completed the end-of-life process for Sauce Connect 4, cutting off traffic and requiring all teams to adopt Sauce Connect 5.5.0+. The current version adds Time-Based Access Control and significantly reduces memory usage compared to v4.
 - **Action Items**:
-  - [ ] Update target platformVersion in test scripts to iOS 26.5 to test on latest simulated Apple hardware
-  - [ ] Review Appium 3 breaking changes and update driver dependencies to Appium Server 3.30.0
+  - [ ] Audit existing network tunnels and terminate any deprecated Sauce Connect v4 client binaries immediately.
+  - [ ] Deploy Sauce Connect Proxy v5.5.0+ to take advantage of up to 5x higher throughput and 50x lower memory overhead.
+  - [ ] Configure the new Time-Based Access Control feature to restrict tunnel uptime and reduce attack surfaces in enterprise environments.
+
+### 🟠 [MAJOR] Apple Pay Automation and Live iOS Accessibility Inspector on Real Device Cloud
+
+- **Date**: April 2026 | **Source**: Sauce Labs Product Release Roundup
+- **Summary**: Sauce Labs enabled automated end-to-end Apple Pay flow testing on private real iOS devices across web and native app checkouts. Additionally, a built-in iOS Accessibility Inspector was introduced on the Real Device Cloud, providing real-time VoiceOver validation and audio feedback.
+- **Action Items**:
+  - [ ] Convert manual payment QA test cases into automated Apple Pay flows for private iOS real devices.
+  - [ ] Utilize the built-in Accessibility Inspector during live iOS sessions to ensure compliance with the European Accessibility Act.
+  - [ ] Integrate VoiceOver and keyboard navigation verification steps into existing iOS test coverage matrices.
 
 ---
 
 ## 📦 SELENIUM-JAVA
 
-**Status**: `SUCCESS` | **Time**: `23737 ms` | **Tokens**: `851 in / 639 out`
+**Status**: `SUCCESS` | **Time**: `19885 ms` | **Tokens**: `762 in / 1150 out`
 
-> Over the past 30 days, the Selenium Java ecosystem has seen release iterations with Selenium 4.47 and Selenium 4.48, alongside security and protocol hardening from Selenium 4.46. Recent highlights include critical bug fixes for Java locators (By.className, By.id, and By.name), RFC 8259 compliance for Java JSON parsing, improved WebDriver BiDi initialization on RemoteWebDriver, enhanced Selenium Grid file transfer capabilities across Docker and Kubernetes, and complete migration of Firefox automation away from CDP toward WebDriver BiDi.
+> The Selenium Java ecosystem has seen notable developments over the past month, marked by the release of Selenium 4.49.0 and 4.48.0, an advance warning regarding a breaking Guava removal in the upcoming Selenium 4.51 release, and the introduction of official documentation standards for AI coding agents. The project continues to drive forward WebDriver BiDi maturation, Selenium Manager cross-platform enhancements (including ARM64 Linux support for Chrome), and Grid file handling improvements, while deprecating legacy endpoints and third-party dependencies in favor of modern standard Java APIs.
 
-### 🔵 [MINOR] Selenium 4.48 Release
+### 🟠 [MAJOR] Upcoming Breaking Change: ExpectedCondition Drops Guava's Function Interface in Selenium 4.51
 
-- **Date**: 2026-08-27 | **Source**: Selenium Official Blog & GitHub Release Notes
-- **Summary**: Selenium 4.48 introduces Java updates including warning annotations for undeclared fields during JSON coercion and fixes for timing-dependent BiDi test state. Selenium Grid was improved to support file upload/download for Kubernetes, Docker, and relay sessions while preventing se:remoteUrl forwarding past consuming nodes.
+- **Date**: 2026-09-21 | **Source**: Selenium Official Blog (selenium.dev/blog)
+- **Summary**: The Selenium project announced an upcoming breaking change targeting Selenium 4.51 where ExpectedCondition will stop implementing Google Guava's Function interface and will exclusively use Java standard java.util.function.Function. This change is part of an ongoing initiative to decouple Selenium Java bindings from external Guava dependencies. Standard usage of WebDriverWait.until(...) remains unaffected, but tests assigning conditions to Guava Function variables will fail to compile.
 - **Action Items**:
-  - [ ] Upgrade Java projects to Selenium 4.48.0 via Maven or Gradle to receive JSON coercion warning annotations and BiDi test state isolation fixes.
-  - [ ] Configure Selenium Grid nodes utilizing Kubernetes or Docker to leverage direct file upload and download handling.
+  - [ ] Audit existing Java test suites for references to 'com.google.common.base.Function' used with 'ExpectedCondition'.
+  - [ ] Refactor custom wait conditions to implement standard 'java.util.function.Function' or preserve concrete 'ExpectedCondition<T>' declarations.
+  - [ ] Ensure build pipelines and shared test utilities do not cast 'ExpectedCondition' instances directly to Guava function types.
 
-### 🟠 [MAJOR] Selenium 4.47 Release: Locator Fixes and Firefox BiDi Migration
+### 🟠 [MAJOR] Selenium 4.49.0 Released: Java Binding Cleanups, Selenium Manager Architecture Fixes, and Grid Hardening
 
-- **Date**: 2026-08-10 | **Source**: Selenium Official Blog & GitHub Release Notes
-- **Summary**: Selenium 4.47 addresses key Java driver issues, fixing By.className and By.id escaping for non-ASCII digits and a By.name double String.format bug. It resolves RemoteWebDriver builder BiDi initialization issues, removes redundant subscription tracking, and restricts Firefox CDP access to enforce WebDriver BiDi standards.
+- **Date**: 2026-09-09 | **Source**: GitHub Release v4.49.0 & Selenium Official Blog
+- **Summary**: Selenium 4.49.0 was officially released across all language bindings and Grid components. For Java, this release removes the deprecated GET session files endpoint, fixes window opening exception handling, cleans up published JAR metadata (including bundled licenses and leaner javadoc JARs), and resolves Selenium Grid 500 errors when downloading files with spaces. Selenium Manager also received updates for 64-bit Chrome on ARM Linux and improved Windows WOW64 architecture detection.
 - **Action Items**:
-  - [ ] Verify and update By locators using non-ASCII characters or percent signs to avoid String.format issues in legacy code.
-  - [ ] Migrate Firefox test automation suites from CDP to WebDriver BiDi APIs as Firefox CDP access is restricted.
-  - [ ] Configure SE_VIDEO_SESSION_SUBFOLDER for Selenium Grid video recording in dynamic containerized environments.
+  - [ ] Upgrade Maven or Gradle dependencies to org.seleniumhq.selenium:selenium-java:4.49.0.
+  - [ ] Remove any calls relying on the deprecated 'GET /session/{sessionId}/se/files/{fileName}' endpoint in custom Grid integrations.
+  - [ ] Verify tests executing on Windows WOW64 systems or Linux ARM64 environments to leverage improved driver auto-detection.
 
-### 🟠 [MAJOR] Selenium 4.46 Release: Security Hardening and RFC 8259 JSON Compliance
+### 🔵 [MINOR] Selenium Releases Modern Standards and Guidance for AI Coding Agents
 
-- **Date**: 2026-07-11 | **Source**: Selenium Official Blog & GitHub Release Notes
-- **Summary**: Selenium 4.46 hardens Java JSON parsing for strict RFC 8259 compliance by rejecting unescaped control characters and fixing U+FFFF sentinel collisions. The update marks Java BiDi classes as beta, shifts BiDi creation to RemoteWebDriver, and addresses a path traversal security issue in Selenium Manager archive extraction.
+- **Date**: 2026-09-29 | **Source**: Selenium Official Blog (selenium.dev/blog)
+- **Summary**: Selenium leadership published guidance and official instructions for developers using AI coding agents (such as GitHub Copilot, Claude, and ChatGPT) to generate Selenium test code. Because many coding models reproduce outdated Selenium 2/3 patterns, the project released dedicated ruleset templates and an llms.txt index to ensure agents write idiomatic, modern Selenium 4 Java code.
 - **Action Items**:
-  - [ ] Audit JSON payloads in tests to ensure strict RFC 8259 compliance with escaped control characters.
-  - [ ] Refactor code accessing raw BiDi connections to use RemoteWebDriver directly and prepare for BiDi API stabilization.
-  - [ ] Update Selenium Manager binaries to remediate path traversal vulnerabilities during archive extraction.
+  - [ ] Add official Selenium context and documentation references (such as selenium.dev/llms.txt) to team agent configurations (e.g., AGENTS.md or CLAUDE.md).
+  - [ ] Review AI-generated test code for deprecated patterns like Thread.sleep, DesiredCapabilities, and mixed implicit/explicit waits.
+  - [ ] Ensure prompt guidelines enforce Selenium 4 idioms such as Selenium Manager auto-resolution, Duration timeouts, and BiDi listeners.
+
+### 🔵 [MINOR] Selenium 4.48.0 Released: Grid Container File Handling and BiDi Validation Upgrades
+
+- **Date**: 2026-08-27 | **Source**: GitHub Release v4.48.0 & Selenium Official Blog
+- **Summary**: Selenium 4.48.0 brought critical stability updates to distributed testing and WebDriver BiDi protocol synchronization. In Java, this version fixed flaky state leakage in BiDi tests and introduced warning annotations for undeclared fields encountered during JSON coercion. Selenium Grid improved file upload and download reliability for Kubernetes and Docker nodes while ensuring se:remoteUrl headers are strictly confined to the consuming node.
+- **Action Items**:
+  - [ ] Verify Grid session management and file transfer tests if deploying on Docker or Kubernetes clusters.
+  - [ ] Monitor test logs for new JSON coercion warning annotations to catch schema mismatches early.
+  - [ ] Take advantage of native Kubernetes and relay-session file transfer enhancements.
 
 ---
 
 ## 📦 SPRING-BOOT
 
-**Status**: `SUCCESS` | **Time**: `17985 ms` | **Tokens**: `370 in / 914 out`
+**Status**: `SUCCESS` | **Time**: `14064 ms` | **Tokens**: `697 in / 1337 out`
 
-> During August 2026, the Spring Boot ecosystem experienced significant maintenance and milestone updates. The Spring team released patch versions Spring Boot 4.1.1 and 4.0.8, alongside the first preview milestone for the upcoming Spring Boot 4.2.0 generation. Related ecosystem projects such as Spring AI 2.0.1, Spring Cloud 2025.1.3 (Oakwood), and Spring Data 2026.1.0-M1 also saw major announcements. Additionally, teams running legacy versions are reminded that open-source support for the Spring Boot 3.5 line officially concluded.
+> Over the past 30 days, the Spring Boot ecosystem advanced toward the upcoming 4.2 release line with the rollout of Spring Boot 4.2.0-M2, alongside synchronized milestone releases across Spring Cloud ('Paddington'), Spring AI 2.1, Spring Security 7.2, and Spring Data. Broad architectural changes were also announced regarding the Spring release train cadence and security advisory infrastructure, emphasizing coordinated single-day monthly updates and heightened security lifecycle governance following the open-source end-of-life of Spring Boot 3.5.
 
-### 🔵 [MINOR] Spring Boot 4.1.1 and 4.0.8 Maintenance Releases
+### 🟠 [MAJOR] Spring Boot 4.2.0-M2 Released with OpenTelemetry Standardization and AMQP Restructuring
 
-- **Date**: 2026-08-20 | **Source**: Spring Blog / Official Release Announcement
-- **Summary**: Spring Boot 4.1.1 and 4.0.8 were officially released to Maven Central. These patch releases contain dozens of bug fixes, documentation updates, and third-party dependency version upgrades across active production release branches.
+- **Date**: 2026-09-25 | **Source**: Official Spring Blog (spring.io/blog)
+- **Summary**: Spring Boot 4.2.0-M2 has been released featuring 141 enhancements, dependency upgrades, and critical architectural changes. Notable features include SSL bundle support for LDAP/LDAPS, standardized OpenTelemetry semantic conventions, image-based build caching for Cloud Native Buildpacks, and a significant restructuring of AMQP starters where 'spring-boot-starter-amqp' transitions to generic AMQP 1.0.
 - **Action Items**:
-  - [ ] Upgrade production applications on the 4.1.x line to version 4.1.1.
-  - [ ] Upgrade applications on the 4.0.x line to 4.0.8 to incorporate bug fixes and security updates.
+  - [ ] Audit messaging dependencies: rename 'spring-boot-starter-amqp' to 'spring-boot-starter-rabbitmq' if utilizing AMQP 0.9.1 to prevent breaking changes.
+  - [ ] Evaluate OpenTelemetry configurations to adopt newly standardized semantic conventions and centralized OTLP endpoint/header properties.
+  - [ ] Test LDAP integrations with SSL bundles, especially in environments relying on LDAPS.
 
-### 🟠 [MAJOR] Spring Boot 4.2.0-M1 Milestone Released
+### 🟠 [MAJOR] Spring Engineering Modernizes Monthly Release Trains and Unveils New Security Advisory Portal
 
-- **Date**: 2026-08-20 | **Source**: Spring Blog / GitHub Release
-- **Summary**: The Spring team announced Spring Boot 4.2.0-M1, marking the first milestone for the 4.2 release branch. This milestone introduces early preview capabilities, dependency upgrades, and foundational changes ahead of the general availability targeted for late 2026.
+- **Date**: 2026-09-21 | **Source**: Official Spring Blog (spring.io/blog)
+- **Summary**: The Spring engineering team announced a major overhaul of the project release cycle, consolidating the historical two-week staggered release train into a single coordinated release day every month (the Thursday following the third Monday). Additionally, Spring introduced a completely redesigned security advisory center on spring.io to facilitate real-time CVE search, project tracking, and vulnerability remediation.
 - **Action Items**:
-  - [ ] Test early 4.2.0-M1 builds in pre-production environments to evaluate upcoming framework enhancements.
-  - [ ] Report any integration bugs or regressions to the spring-projects/spring-boot GitHub issue tracker.
+  - [ ] Update internal deployment and dependency automation pipelines to align with the new synchronized monthly release cadence (Thursday after the third Monday).
+  - [ ] Bookmark and integrate CI/CD scanning tools with the revamped spring.io/security-advisories portal for querying CVEs by ID, severity, and project.
 
-### 🟠 [MAJOR] Spring AI 2.0.1 and Spring Cloud 2025.1.3 (Oakwood) Releases
+### 🔵 [MINOR] Spring Cloud 2026.0.0-M1 ('Paddington') Ships on Spring Boot 4.2 Baseline
 
-- **Date**: 2026-08-21 | **Source**: Spring Blog
-- **Summary**: Spring AI 2.0.1 was published alongside broader ecosystem releases including Spring Cloud 2025.1.3 (Oakwood), Spring Data 2026.1.0-M1, and Spring Batch 6.1.0-M1. Updates focus on agentic AI memory patterns, multi-collection MongoDB bulk operations, and gRPC integrations.
+- **Date**: 2026-09-24 | **Source**: Official Spring Blog (spring.io/blog)
+- **Summary**: Milestone 1 of Spring Cloud 2026.0.0, codenamed Paddington, has shipped with full compatibility for Spring Boot 4.2.0-M2. The milestone introduces the new PropertyPathNotifier interface for HTTP-notified configuration alterations and hardens proxy forwarding filters against untrusted upstream proxies.
 - **Action Items**:
-  - [ ] Review dependency compatibility when updating to Spring AI 2.0.1 and Spring Cloud Oakwood in microservices.
-  - [ ] Adopt new tool calling and Session API context compaction patterns for Spring AI agentic workflows.
+  - [ ] Explore Spring Cloud 2026.0.0-M1 for projects adopting Boot 4.2.x, testing PropertyPathNotifier integration for external configuration refreshes.
+  - [ ] Verify reverse-proxy configurations in gateway services to ensure forwarded headers from untrusted proxies are handled securely.
 
-### 🔴 [CRITICAL] End of Open-Source Support for Spring Boot 3.5
+### 🔵 [MINOR] Spring AI 2.1.0-M1 Integrates with Boot 4.2 and Expands LLM Tooling
 
-- **Date**: 2026-06-30 | **Source**: Spring Lifecycle & Support Advisory
-- **Summary**: Open-source support for the Spring Boot 3.5 branch reached End of Life (EOL) on June 30, 2026. Organizations must transition to Spring Boot 4.x to continue receiving community security patches and maintenance releases.
+- **Date**: 2026-09-25 | **Source**: Official Spring Blog (spring.io/blog)
+- **Summary**: Spring AI 2.1.0-M1 was released in lockstep with Spring Boot 4.2.0-M2, establishing Boot 4.2 as its minimum baseline. The release delivers support for OpenAI's new Responses API, an enhanced structured content model for complex messaging, and pipelines for inserting pre-computed embeddings into vector stores.
 - **Action Items**:
-  - [ ] Audit enterprise applications to identify any remaining services running on Spring Boot 3.5.x or earlier.
-  - [ ] Execute migration plans to upgrade applications to Spring Boot 4.1.x or secure commercial support.
+  - [ ] Assess experimental agentic AI workflows by testing the OpenAI Responses API integration in Spring AI 2.1.0-M1.
+  - [ ] Validate pre-computed embedding ingestion in supported vector stores before upgrading downstream AI services.
+
+### 🔴 [CRITICAL] Spring Boot 3.x Deprecation Window Closes: Production Migration Urged to 4.1.x
+
+- **Date**: September 2026 | **Source**: Spring Boot Project Support Roadmap
+- **Summary**: Following the OSS end-of-life of Spring Boot 3.5 in mid-2026 and the upcoming retirement of 4.0 in December 2026, ecosystem advisories have reiterated that production workloads must target Spring Boot 4.1.x for active OSS maintenance. Spring Boot 4.1 remains the recommended baseline, offering native gRPC support, SSRF mitigation, and Java 25 compatibility.
+- **Action Items**:
+  - [ ] Plan migrations from Spring Boot 3.5 immediately, as community OSS patches have ceased.
+  - [ ] Migrate services directly to Spring Boot 4.1.x, skipping intermediate 4.0.x versions due to 4.0 reaching OSS EOL in December 2026.
+  - [ ] Take advantage of Boot 4.1's built-in gRPC auto-configuration and HTTP client SSRF filters (InetAddressFilter) during the upgrade.
 
 ---
 
 ## 📦 AUTOMATION-ANYWHERE-360
 
-**Status**: `SUCCESS` | **Time**: `46343 ms` | **Tokens**: `1041 in / 2126 out`
+**Status**: `SUCCESS` | **Time**: `13319 ms` | **Tokens**: `486 in / 1059 out`
 
-> The Automation Anywhere 360 ecosystem in 2026 focuses heavily on Agentic Process Automation (APA), expanding platform capabilities from traditional RPA to autonomous AI agents. Key developments include the general availability of Model Context Protocol (MCP) inbound integration, full End of Life (EOL) for IQ Bot Cloud in favor of Document Automation, Control Room hosted LLMs, and new enterprise orchestration capabilities via the Mozart orchestrator and Autonomous Service Desk.
+> Recent developments in the Automation Anywhere 360 (A360) ecosystem highlight a strong transition toward Agentic Process Automation (APA) and native enterprise extensibility. Key releases in September 2026 include the launch of Automation 360 v.41, which delivers 12 native enterprise connectors across Task Bots and API Tasks, Multi-Vault credential management in the Control Room, and the general availability of the Agentic Procure-to-Pay (P2P) autonomous finance solution. Additionally, updates to core packages and queue management provide enhanced governance, cross-platform execution across Windows and macOS, and refined AI credit consumption metrics.
 
-### 🟠 [MAJOR] Agent Interoperability GA via Model Context Protocol (MCP)
+### 🟠 [MAJOR] Automation 360 v.41 Native Connectors Framework Release
 
-- **Date**: March 2026 | **Source**: Automation Anywhere Pathfinder Community & Release Notes v.39
-- **Summary**: Automation Anywhere introduced Model Context Protocol (MCP) inbound integration in general availability for v.39. This enables external AI agents and third-party systems to securely trigger and interact with Automation Anywhere automations via an SSE remote MCP server with PRE governance.
+- **Date**: September 15, 2026 | **Source**: Automation Anywhere Pathfinder Community & Product Updates
+- **Summary**: Automation Anywhere introduced 12 native pre-built connectors in Automation 360 v.41 across content management, collaboration, identity, analytics, and software delivery. These connectors standardize OAuth2 and PAT authentication, provide pre-configured actions and bulk iterators, and operate uniformly across Task Bots and API Tasks on both Windows and macOS.
 - **Action Items**:
-  - [ ] Configure RBAC permissions and Process Reasoning Engine (PRE) governance policies in the Control Room before enabling MCP inbound protocols.
-  - [ ] Review existing API Task and automation endpoints to expose them safely to external AI agents via MCP.
+  - [ ] Audit existing custom Python or REST scripts used for third-party integrations (e.g., Slack, Box, Databricks) and plan migration to native v.41 connectors.
+  - [ ] Ensure Bot Agent installations are updated to maintain full cross-platform compatibility across Windows and macOS runners.
+  - [ ] Update COE development standards to enforce native connector authentication flows via OAuth2 or PAT.
 
-### 🔴 [CRITICAL] IQ Bot Cloud End-of-Life and Migration to Document Automation
+### 🟠 [MAJOR] Control Room Multi-Vault Credential Support and Credit Tracking Updates
 
-- **Date**: March 2026 | **Source**: Official Automation Anywhere Community Announcement
-- **Summary**: IQ Bot Cloud officially reached its End of Life (EOL) in March 2026, ending maintenance, support, and functional updates for cloud instances. Automation Anywhere directs all cloud customers to migrate their document processing workloads to Document Automation within Automation 360.
+- **Date**: September 2026 | **Source**: Automation 360 v.41 Release Notes & Control Room Documentation
+- **Summary**: Automation 360 v.41 introduces Multi-Vault Support for enterprise licensing, enabling a single Control Room to integrate with multiple external key vaults simultaneously. The update also refreshes the Control Room Automation Credit drill-down interface, establishing clear usage accounting between Service Units and AI/Document Automation credits.
 - **Action Items**:
-  - [ ] Audit all active IQ Bot Cloud extraction learning instances and document processing workflows.
-  - [ ] Migrate document extraction pipelines to A360 Document Automation and retrain extraction models.
+  - [ ] Control Room administrators should evaluate external Key Vault architectures and configure multi-vault endpoints if managing segregated secrets across departments.
+  - [ ] COE Leads should review the updated Automation Credit drill-down page to distinguish between standard Service Units and Document Automation/AI Credits.
+  - [ ] Verify dependencies in API Tasks that reference AI Skills to ensure smooth check-in and deployment in version control.
 
-### 🟠 [MAJOR] 2026 Platform Enhancements: Agentic Process Automation and Autonomous Service Desk
+### 🟠 [MAJOR] General Availability of Agentic Procure-to-Pay (P2P) Solution
 
-- **Date**: May 2026 | **Source**: Automation Anywhere Press Release & Imagine Conference Announcements
-- **Summary**: Automation Anywhere expanded its Agentic Process Automation (APA) capabilities with the enterprise launch of the Mozart orchestrator and Context Intelligence Graph. The platform includes enhanced pre-built agents for the Autonomous Service Desk to auto-resolve complex IT service requests with governed AI execution.
+- **Date**: September 9, 2026 | **Source**: Official Automation Anywhere Blog & Press Release
+- **Summary**: Automation Anywhere launched its Agentic Procure-to-Pay (P2P) solution within the Autonomous Finance suite, powered by the Process Reasoning Engine (PRE) and Mozart Orchestrator. The solution coordinates multi-agent interactions to resolve discrepancies, validate documents, and execute finance transactions directly across enterprise ERPs without custom scripting.
 - **Action Items**:
-  - [ ] Evaluate candidate IT support and multi-system workflows for integration with Autonomous Service Desk pre-built agents.
-  - [ ] Review Control Room orchestration setup and train CoE teams on leveraging the Process Reasoning Engine.
+  - [ ] Evaluate end-to-end invoice and purchase-order workflows against the new Agentic P2P capabilities to identify reduction targets for manual exception queues.
+  - [ ] Review Mozart Orchestrator configurations and ensure required ERP connector permissions are established for agentic operations.
+  - [ ] Benchmark Document Automation extraction models against incoming unstructured vendor invoice formats.
 
-### 🟠 [MAJOR] AI Agent Studio Enhancements and Control Room LLM Hosting
+### 🔵 [MINOR] Control Room Queue Operations and Core Package Enhancements
 
-- **Date**: 2026-03-15 | **Source**: Automation Anywhere Product Updates v.38 / v.39
-- **Summary**: AI Agent Studio has been upgraded to support native multimodal AI skills, accepting file and image inputs directly alongside text. Control Room now offers native hosting for secure, governed LLMs purpose-built for agentic workloads without requiring external model endpoint setup.
+- **Date**: September 2026 | **Source**: Automation 360 Documentation & System Package Updates
+- **Summary**: The Control Room received enhanced queue operations allowing administrators to pause, resume, or terminate active automation workloads directly from the in-progress view. Core runtime libraries, including the System package (v.3.18.x) and Document Extraction components, received incremental performance, security, and lifecycle management improvements.
 - **Action Items**:
-  - [ ] Explore native Control Room LLMs to reduce third-party API dependencies and simplify data privacy compliance.
-  - [ ] Update existing prompt pipelines and document summarization bots to leverage multimodal AI skills and built-in RAG.
-
-### 🔵 [MINOR] Control Room v.39 Release & Bot Agent Compatibility Updates
-
-- **Date**: 2026-03-12 | **Source**: Automation Anywhere Documentation & Release Notes v.39
-- **Summary**: Automation 360 v.39 delivered continuous delivery improvements for Cloud and On-Premises Control Rooms, alongside updated package support for Microsoft Teams, Word, and Excel. The accompanying Bot Agent update for v.39 is optional, allowing bots to execute on existing Bot Agent installations.
-- **Action Items**:
-  - [ ] Verify that Control Room instances remain within the supported n-3 release window.
-  - [ ] Deploy optional Bot Agent updates on developer machines or test pools to evaluate updated packages and macOS agent features.
+  - [ ] Review active workload queues in the Control Room to train operators on new Pause, Resume, and Stop controls.
+  - [ ] Verify Bot Agent versions across runner pools to meet minimum compatibility requirements (Build 10217 / Bot Agent 21.88+) for the latest System package.
+  - [ ] Use the Control Room package manager to set default, stable versions for Document Extraction and System packages across all active bots.
 
 ---
 
 ## 📦 JAVA-OPENJDK
 
-**Status**: `SUCCESS` | **Time**: `23729 ms` | **Tokens**: `407 in / 846 out`
+**Status**: `SUCCESS` | **Time**: `25833 ms` | **Tokens**: `3167 in / 1301 out`
 
-> The Java and OpenJDK ecosystem in August and September 2026 is highlighted by the Release Candidate phase of JDK 27 ahead of its September 15 General Availability, featuring major zero-code defaults like Post-Quantum TLS 1.3 and Compact Object Headers. Additionally, OpenJDK distribution teams shifted to a monthly Critical Security Patch Update (CSPU) schedule, while Project Valhalla achieved a landmark milestone by beginning to merge JEP 401 (Value Classes) into the JDK main line.
+> The Java and OpenJDK ecosystem reached major milestones over the past month, highlighted by the General Availability of JDK 27 on September 15, 2026. This feature release brings significant architectural enhancements, including Compact Object Headers enabled by default, standardized G1 GC across all deployment environments, and native Post-Quantum Hybrid Key Exchange in TLS 1.3. Concurrently, momentum has shifted toward JDK 28, with milestone proposals such as Project Leyden's Ahead-of-Time Code Compilation (JEP 544), Project Valhalla's Value Objects (JEP 401), and a standard Simple JSON API (JEP 540) targeted for early 2027. Additionally, enterprise architects face an imminent licensing cutoff as Oracle JDK 21 permissive NFTC support reaches its one-year post-JDK 25 transition mark ahead of the October 2026 Critical Patch Update.
 
-### 🔴 [CRITICAL] JDK 27 Enters Release Candidate Phase Ahead of September General Availability
+### 🟠 [MAJOR] JDK 27 Reaches General Availability with Compact Object Headers and Quantum-Resistant TLS
 
-- **Date**: August 2026 | **Source**: OpenJDK JDK 27 Project Page
-- **Summary**: JDK 27 reached its Release Candidate phase with a frozen set of nine JEPs targeted for GA on September 15, 2026. Headline features include Post-Quantum Hybrid Key Exchange for TLS 1.3 (JEP 527), making G1 the default GC in all environments (JEP 523), and enabling Compact Object Headers by default (JEP 534).
+- **Date**: 2026-09-15 | **Source**: OpenJDK (JSR 402)
+- **Summary**: JDK 27 reached General Availability on September 15, 2026, delivering nine JEPs alongside thousands of performance and reliability improvements. Production highlights include turning Compact Object Headers on by default (reducing header overhead from 12 bytes to 8 bytes), standardizing the G1 garbage collector across all platforms, and implementing RFC 8446 hybrid post-quantum key exchange for TLS 1.3. The release also advances preview capabilities including lazy constants, structured concurrency, and primitive type pattern matching.
 - **Action Items**:
-  - [ ] Test early-access Build 35 of JDK 27 against enterprise application suites ahead of the September 15, 2026 GA release.
-  - [ ] Verify application compatibility with post-quantum hybrid key exchange (X25519MLKEM768) in TLS 1.3.
-  - [ ] Benchmark heap savings resulting from the newly default Compact Object Headers (JEP 534).
+  - [ ] Profile memory usage in pre-production environments to verify footprint reductions from the 8-byte Compact Object Headers layout.
+  - [ ] Check container configurations that previously defaulted to Serial GC to evaluate performance and pause behavior under G1 GC.
+  - [ ] Update third-party bytecode-manipulation and instrumentation dependencies (e.g., ByteBuddy, ASM) to versions supporting JDK 27 bytecode.
 
-### 🟠 [MAJOR] OpenJDK Updates Cadence Transitions to Monthly Critical Security Patch Updates (CSPUs)
+### 🔵 [MINOR] Inside Java Analyzes Performance and Throughput Gains in JDK 27
 
-- **Date**: August 2026 | **Source**: OpenJDK jdk-updates-dev Mailing List
-- **Summary**: In response to accelerated vulnerability discovery across ecosystems, OpenJDK maintainers and vendor distributions (including Microsoft and BellSoft) transitioned to a monthly Critical Security Patch Update (CSPU) schedule. August 2026 marked the first interim monthly release with builds for JDK 26.0.2.1, 25.0.4.1, and 21.0.12.1.
+- **Date**: 2026-09-28 | **Source**: Inside Java
+- **Summary**: Oracle's Java team published an in-depth benchmark analysis documenting more than 2,300 commits contributing to runtime and core library performance in JDK 27. Key technical optimizations include array-copy-free Base64 encoding, HashMap bulk copy path optimizations, and general-purpose-register SHA-3 intrinsics tailored for AArch64 hardware. Paired with default compact object headers, typical heap-intensive applications observe measurable reductions in GC pause intervals and cache miss rates.
 - **Action Items**:
-  - [ ] Adjust infrastructure patch management schedules to accommodate monthly OpenJDK security updates.
-  - [ ] Deploy August 2026 security patch builds (26.0.2.1, 25.0.4.1, 21.0.12.1) across production environments.
+  - [ ] Review application startup performance and throughput on JDK 27 on ARM64/AArch64 instances to capitalize on new hardware crypto intrinsics.
+  - [ ] Audit high-frequency String and collection transformation pipelines to identify potential CPU savings from allocation-free Base64 encoding and optimized HashMap copy paths.
 
-### 🟠 [MAJOR] Project Valhalla Begins Merging Value Classes (JEP 401) into JDK Main Line
+### 🟠 [MAJOR] JEP 544 Ahead-of-Time Code Compilation Targeted for JDK 28
 
-- **Date**: July 2026 | **Source**: Inside Java / OpenJDK Project Valhalla
-- **Summary**: Project Valhalla reached a long-awaited milestone as JEP 401 (Value Classes and Objects) began merging into the OpenJDK main line repository. This integration prepares the JVM runtime to flatten object representations in memory and eliminate object identity overhead for value types in upcoming JDK releases.
+- **Date**: 2026-10-01 | **Source**: OpenJDK (Project Leyden)
+- **Summary**: JEP 544 (Ahead-of-Time Code Compilation) was officially targeted to JDK 28 as the third core milestone of Project Leyden. The proposal extends HotSpot's AOT cache to store optimized native machine code compiled during training runs, enabling instantaneous startup without sacrificing C1/C2 JIT dynamic reoptimization in production. Framework microbenchmarks reveal cold-start latency reductions ranging from 65% to 80% on resource-constrained cloud instances.
 - **Action Items**:
-  - [ ] Audit data structures and domain models to identify prospective value class candidates once JDK 28 preview builds open.
-  - [ ] Experiment with Project Valhalla early-access builds to measure memory usage reductions in data-heavy workloads.
+  - [ ] Test early-access builds of JDK 28 with Project Leyden flags (-XX:AOTCache) to benchmark cold-start reductions in containerized environments.
+  - [ ] Assess CI/CD pipeline capabilities for running AOT training runs to generate application-specific cache artifacts prior to production deployment.
 
-### 🟠 [MAJOR] JDK 27 Standardizes Security Library Enhancements and Observability Redaction
+### 🟠 [MAJOR] JDK 28 Pipeline Integrates Native Simple JSON API and Valhalla Value Objects
 
-- **Date**: August 2026 | **Source**: OpenJDK JEP Dashboard
-- **Summary**: Alongside runtime performance defaults, JDK 27 introduces native PEM Encodings for cryptographic objects (JEP 538), JFR In-Process Data Redaction (JEP 536), and updated previews for Lazy Constants (JEP 531) and Structured Concurrency (JEP 533).
+- **Date**: 2026-10-02 | **Source**: OpenJDK / Inside Java
+- **Summary**: The OpenJDK team integrated JEP 540 (Simple JSON API Incubator) and targeted JEP 401 (Value Objects Preview) for JDK 28. JEP 540 introduces a standard, low-ceremony JSON parser and generator directly into the JDK core libraries, minimizing baseline dependencies for microservices and cloud scripts. Simultaneously, Project Valhalla's JEP 401 advances identity-free value classes to optimize memory layout and cache locality without compromising Java's object model.
 - **Action Items**:
-  - [ ] Review application logging configurations to leverage new JFR In-Process Data Redaction (JEP 536) for sensitive data compliance.
-  - [ ] Ensure custom security libraries align with the new standard PEM Encodings API (JEP 538).
+  - [ ] Download JDK 28 Early-Access builds to evaluate the incubator Simple JSON API against current third-party library footprints.
+  - [ ] Begin auditing data model classes and value candidates to prepare for value object semantic changes under Project Valhalla.
+
+### 🔴 [CRITICAL] Oracle JDK 21 Permissive Licensing Nears Sunset Ahead of October 2026 CPU
+
+- **Date**: 2026-09-15 | **Source**: Oracle Java SE Support Roadmap
+- **Summary**: Oracle updated its Java SE Support Roadmap to emphasize that permissive, free-for-production use of Oracle JDK 21 under the No-Fee Terms and Conditions (NFTC) license ends one year following the JDK 25 LTS release. Starting with the upcoming October 2026 Critical Patch Update (CPU), quarterly patches for Oracle JDK 21 will revert to the restrictive OTN license, requiring commercial subscriptions for production use. Organizations maintaining JDK 21 runtimes must either transition to open-source OpenJDK distributions or upgrade workloads to JDK 25 LTS.
+- **Action Items**:
+  - [ ] Verify whether production workloads rely on Oracle JDK 21 binaries and evaluate licensing exposure before the October 2026 CPU.
+  - [ ] Formulate migration paths to upgrade directly to Oracle JDK 25 LTS under active NFTC terms, or switch to downstream open-source builds like Eclipse Temurin or Amazon Corretto.
 
 ---
 
 ## 📦 SPRING-AI-JAVA
 
-**Status**: `SUCCESS` | **Time**: `40157 ms` | **Tokens**: `846 in / 2021 out`
+**Status**: `SUCCESS` | **Time**: `23420 ms` | **Tokens**: `956 in / 1662 out`
 
-> Recent developments in the Spring AI ecosystem highlight the release of Spring AI 2.0.1 patch and 2.0.0 GA. Grounded on a Spring Boot 4 and Spring Framework 7 baseline, Spring AI 2.0 introduces upgraded Tool Calling architectures, JSpecify null-safety annotations, Jackson 3 serialization, dynamic Tool Search Advisors, and event-sourced Session memory API with context compaction.
+> The Spring AI ecosystem has advanced significantly with the release of Spring AI 2.1.0-M1 and recent architectural enhancements around agentic workflows, Modular RAG, and the Model Context Protocol (MCP). Recent updates highlight a migration baseline toward Spring Boot 4.2, ordered Message Parts for complex multimodal and reasoning chains, OpenAI Responses API support, pre-computed vector embeddings, and Modular RAG precision mechanisms.
 
-### 🔴 [CRITICAL] Spring AI 2.0.1 Released with Critical Security Patches and Naming Standardization
+### 🟠 [MAJOR] Spring AI 2.1.0-M1 Milestone Release
 
-- **Date**: August 21, 2026 | **Source**: Spring.io Blog
-- **Summary**: Spring AI 2.0.1 was released as the first major maintenance patch following 2.0.0 GA, resolving over 80 issues. The update patches critical security vulnerabilities, including CVE-2026-47851 (PDF Reader recursion) and CVE-2026-59318 (ToolCallingManager prompt injection), while standardizing module naming.
+- **Date**: September 25, 2026 | **Source**: Spring.io Official Blog - Spring AI 2.1.0-M1 Announcement
+- **Summary**: Spring AI 2.1.0-M1 introduces a structured, ordered model for message content via MessagePart classes, supporting multimodal blocks and reasoning signatures from providers like Anthropic and Gemini. It establishes Spring Boot 4.2 as the new baseline and introduces native support for the OpenAI Responses API. Additionally, developers can now write pre-computed embeddings directly into supported vector stores.
 - **Action Items**:
-  - [ ] Upgrade Spring AI dependency version to 2.0.1 in build configuration.
-  - [ ] Rename Redis chat memory auto-configuration module imports to follow the standard spring-ai-autoconfigure-* naming convention.
-  - [ ] Replace retired Mistral AI model constants with current supported model names.
+  - [ ] Evaluate the new MessagePart model (ReasoningPart, ToolCallPart, MediaPart) when migrating LLM interaction pipelines requiring thought-chain preservation.
+  - [ ] Test compatibility with Spring Boot 4.2.0-M2 milestone dependencies in non-production environments.
+  - [ ] Test integration with the OpenAI Responses API and the new vector store pre-computed embedding ingestion APIs.
 
-### 🟠 [MAJOR] Spring AI 2.0.0 GA Released with Spring Boot 4 Baseline and Jackson 3 Support
+### 🔵 [MINOR] Spring AI Modular RAG and TypeSafe Evaluation Framework
 
-- **Date**: June 12, 2026 | **Source**: Spring.io Blog
-- **Summary**: Spring AI 2.0.0 GA was officially released, delivering redesigned foundation APIs built for Spring Boot 4. Key updates include full migration to Jackson 3 for improved serialization, JSpecify null-safety annotations across the codebase, and streamlined ChatClient interfaces.
+- **Date**: October 02, 2026 | **Source**: Spring.io Engineering Blog - Christian Tzolov
+- **Summary**: The Spring engineering team introduced Modular RAG integration using Spring AI TypeSafe and the Jev model. This approach enables typed questions and calibrated numeric scoring to filter retrieved context chunks, preserving only the most accurate content for prompt construction. It optimizes token usage and prevents irrelevant vector store context from degrading LLM accuracy.
 - **Action Items**:
-  - [ ] Upgrade application baseline to Spring Boot 4.0/4.1 and Spring Framework 7.0.
-  - [ ] Migrate custom JSON handling logic to Jackson 3 and leverage the new JsonHelper class.
-  - [ ] Review JSpecify null-safety annotations when extending core Spring AI interfaces.
+  - [ ] Review Modular RAG architectures to integrate calibrated question evaluation and filtering before context ingestion.
+  - [ ] Experiment with TypeSafe Jev evaluations to reduce hallucinations and strip non-relevant retrieved documents from prompt context.
 
-### 🟠 [MAJOR] Tool Calling Overhaul and Tool Search Advisor in Spring AI 2.0
+### 🟠 [MAJOR] Model Context Protocol (MCP) Streamable HTTP and Agentic Abstractions
 
-- **Date**: June 15, 2026 | **Source**: Spring.io Engineering Blog
-- **Summary**: Spring AI 2.0 decoupled internal tool execution loops from individual ChatModels in favor of a composable agentic architecture. The overhaul introduces ToolCallingAdvisor and ToolSearchToolCallingAdvisor, enabling dynamic index-based tool discovery.
+- **Date**: September 2026 | **Source**: Spring I/O & Official Documentation Updates
+- **Summary**: Spring AI has consolidated its Model Context Protocol (MCP) toolchain, deprecating older SSE transports in favor of Streamable HTTP as the default transport. The framework expanded declarative programming with annotations like @McpTool, @McpResource, and @McpPrompt alongside context optimization patterns such as dynamic Tool Search Tools. Advanced agentic patterns including Recursive Advisors and early Agent Client Protocol (ACP) integrations were also formalized for multi-step autonomous workflows.
 - **Action Items**:
-  - [ ] Migrate explicit tool execution to ChatClient with ToolCallingAdvisor.
-  - [ ] Register functions directly as ToolCallback beans via ChatClient.prompt().tools(...).
-  - [ ] Use ToolSearchToolCallingAdvisor with Vector Store or Lucene index for on-demand tool discovery in large toolsets.
-
-### 🟠 [MAJOR] Session API for Event-Sourced Agentic Memory and Context Compaction
-
-- **Date**: April 15, 2026 | **Source**: Spring AI Agentic Patterns Series
-- **Summary**: Spring AI introduced the Session API, an event-sourced short-term memory architecture with automatic context compaction. The feature allows autonomous agents to maintain state across long conversations while optimizing model context windows.
-- **Action Items**:
-  - [ ] Implement the Session API in multi-turn conversational agents requiring short-term state persistence.
-  - [ ] Configure context compaction rules to preserve key context and control prompt token usage.
+  - [ ] Replace legacy Server-Sent Events (SSE) transports with the standard Streamable HTTP transport for remote MCP deployments.
+  - [ ] Transition custom tool integration code to declarative annotations such as @McpTool and inject McpSyncRequestContext for unified telemetry.
+  - [ ] Implement tool search patterns for large tool sets to minimize prompt token overhead.
 
 ---
 
 ## 📦 SONARQUBE
 
-**Status**: `SUCCESS` | **Time**: `18974 ms` | **Tokens**: `437 in / 649 out`
+**Status**: `SUCCESS` | **Time**: `13659 ms` | **Tokens**: `542 in / 1269 out`
 
-> Recent developments in the SonarQube ecosystem center on code verification for AI-generated and agentic software. Key highlights include the release of SonarQube Server 2026.4 featuring built-in Architecture Management and a dedicated 'Sonar way for Agentic AI' Quality Gate, the acquisition of automated AI remediation platform Gitar, the General Availability of SonarQube Hunter Agent for deep business logic vulnerability detection, and expanded developer tooling via Model Context Protocol (MCP) connectivity.
+> Recent developments across the SonarQube ecosystem are centered on the agentic AI software development lifecycle, highlighted by the flagship release of SonarQube Server 2026.5 LTA. Sonar has expanded enterprise-grade AI verification tools—previously exclusive to SonarQube Cloud—to self-managed server deployments, introduced native static analysis for R and R Markdown, released targeted Quality Gates for AI-generated code, and delivered SonarQube Model Context Protocol (MCP) integrations for AI agents.
 
-### 🔴 [CRITICAL] SonarQube Server 2026.4 Release and Agentic AI Code Verification
+### 🟠 [MAJOR] SonarQube Server 2026.5 LTA Release Brings In-Perimeter Agentic Verification
 
-- **Date**: July 2026 | **Source**: SonarSource Blog and Release Notes
-- **Summary**: SonarQube Server 2026.4 introduces the 'Sonar way for Agentic AI' quality gate and rules tailored for AI-generated code. It features native Architecture Management to detect architectural debt automatically, adds full Gosu language support, and expands security rules targeting dependency risks and AI code vulnerabilities.
+- **Date**: September 29, 2026 | **Source**: SonarSource Official Blog
+- **Summary**: Sonar released SonarQube Server 2026.5 LTA, bringing full agentic code-verification capabilities within customer-managed perimeters. The release brings Sonar Vortex, the SonarQube Remediation Agent, and the SonarQube Hunter Agent to on-premise and private cloud installations. It empowers engineering teams to verify and remediate code generated by AI coding agents with enterprise-grade isolation.
 - **Action Items**:
-  - [ ] Upgrade SonarQube Server instances to version 2026.4 or patch 2026.4.1
-  - [ ] Apply the 'Sonar way for Agentic AI' quality profile to repositories with high AI code contribution
-  - [ ] Configure native Architecture Management rules to monitor component dependencies and catch architectural drift
+  - [ ] Plan upgrades to SonarQube Server 2026.5 LTA to receive long-term active stability and local agentic toolsets.
+  - [ ] Review internal policies for automated code remediation using the new SonarQube Remediation Agent inside self-managed environments.
+  - [ ] Verify system and database prerequisites outlined in the 2026.5 release notes prior to migration from 2026.1 or earlier LTA releases.
 
-### 🟠 [MAJOR] General Availability of SonarQube Hunter Agent for Complex Security Analysis
+### 🟠 [MAJOR] Sonar Introduces Native R and R Markdown Language Analysis
 
-- **Date**: August 2026 | **Source**: SonarSource Official Blog
-- **Summary**: Sonar announced the General Availability of SonarQube Hunter Agent, an AI-driven security analysis agent. It detects complex vulnerabilities such as broken access control, business logic flaws, and authentication weaknesses that standard static analysis rules often miss.
+- **Date**: September 15, 2026 | **Source**: SonarSource Official Blog & Product Documentation
+- **Summary**: Sonar announced native R language analysis for both SonarQube Cloud and SonarQube Server 2026.5 LTA. The release introduces 82 dedicated static analysis rules supporting base R and embedded code within R Markdown documents. Capabilities include secret detection, duplication checking, code metrics, and direct ingestion of lintr reports for regulated data science workflows.
 - **Action Items**:
-  - [ ] Enable Hunter Agent in SonarQube environments to scan sensitive authentication and authorization paths
-  - [ ] Review Hunter Agent findings alongside traditional SAST and SCA results in security dashboards
+  - [ ] Include .R and .Rmd files in Sonar scanner project analysis configurations.
+  - [ ] Configure Cobertura test coverage reports and import existing lintr rule findings into SonarQube.
+  - [ ] Assign the new default R quality profile and include R codebases under centralized Quality Gate governance.
 
-### 🟠 [MAJOR] Acquisition of Gitar and Expansion into Zero-Trust Automated Remediation
+### 🟠 [MAJOR] Adoption of 'Sonar way for Agentic AI' Quality Gate and Architecture Management
 
-- **Date**: August 2026 | **Source**: SonarSource Press Release
-- **Summary**: Sonar acquired Gitar to integrate automated AI code review and remediation into its zero-trust code verification platform. Gitar goes beyond flagging issues by generating code fixes, validating them against CI tests, and committing patches directly to feature branches.
+- **Date**: September 2026 | **Source**: SonarQube Server Documentation & Release 2026.4 / 2026.5
+- **Summary**: Sonar expanded its quality enforcement options by standardizing the 'Sonar way for Agentic AI' Quality Gate across Server and Cloud. This profile recalibrates code evaluation by applying strict requirements on dependencies, architectural drift, and security hotspots while accommodating harmless syntactic stylistic variations. It directly targets the higher rate of supply-chain and reliability defects introduced by autonomous coding tools.
 - **Action Items**:
-  - [ ] Evaluate Gitar integration options within existing CI/CD pipelines for automated code fixes
-  - [ ] Review bot permission models and branch protection rules for automated pull request remediation
+  - [ ] Evaluate the 'Sonar way for Agentic AI' Quality Gate for repositories and branches experiencing heavy AI agent generation.
+  - [ ] Review architecture management settings to monitor system drift and prevent dependency bloat introduced by autonomous pull requests.
+  - [ ] Audit existing branch protection rules to prevent bypasses of automated security gates.
 
-### 🟠 [MAJOR] Model Context Protocol (MCP) Integration and Developer Tooling Updates
+### 🔵 [MINOR] SonarQube Community Build 26.9 and LTA Maintenance Rollups Released
 
-- **Date**: August 2026 | **Source**: SonarQube Documentation and Developer Tools
-- **Summary**: SonarQube enhanced its developer ecosystem with native Model Context Protocol (MCP) server support and updated CLI tools. This enables AI coding assistants to fetch project context, quality rules, and issue reports in real time, streamlining agentic coding workflows.
+- **Date**: September 23, 2026 | **Source**: SonarSource GitHub Releases & Community Forum
+- **Summary**: SonarSource published monthly maintenance and community releases, including SonarQube Community Build 26.9.0.129388 and maintenance rollups 2026.1.6 LTA and 2025.4.9 LTA. These updates provide maintenance patches, memory optimizations for scanner operations, and security rollups across supported LTA release tracks.
 - **Action Items**:
-  - [ ] Set up the SonarQube MCP server in developer AI assistant configurations like Claude Code or Cursor
-  - [ ] Incorporate Sonar CLI agentic hooks into local development toolchains for automated context analysis
+  - [ ] Deploy the SonarQube Community Build 26.9 container images or packages in test environments.
+  - [ ] Apply SonarQube Server patch releases (2026.1.6 LTA and 2025.4.9 LTA) to resolve known stability and analyzer defects.
+
+### 🔵 [MINOR] Expanded IDE and MCP Server Ecosystem for AI Coding Agents
+
+- **Date**: September 2026 | **Source**: SonarSource Agent Plugins Repository
+- **Summary**: Sonar has expanded its integration ecosystem by delivering dedicated agent plugins leveraging the SonarQube Model Context Protocol (MCP) Server and SonarQube CLI. Autonomous agents can now query Quality Gate statuses, review dependency risks, and inspect open issues directly in the developer session before submitting pull requests.
+- **Action Items**:
+  - [ ] Install the SonarQube CLI and configure the SonarQube MCP Server for supported agent environments such as Cursor, Windsurf, Claude Code, or Google Antigravity.
+  - [ ] Embed pre-commit deterministic verification commands into agent prompt instructions to catch issues prior to PR creation.
 
 ---
 
